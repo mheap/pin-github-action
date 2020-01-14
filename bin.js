@@ -18,7 +18,7 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 
     const output = await run(input);
 
-    console.log(output.workflow);
+    fs.writeFileSync(filename, output.workflow);
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
     // and generate a PR to update the actions to the latest version. This allows them a
