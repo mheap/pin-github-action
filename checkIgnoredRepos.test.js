@@ -1,30 +1,30 @@
-const checkIgnoredRepos = require("./checkIgnoredRepos");
+const checkAllowedRepos = require("./checkAllowedRepos");
 
 test("empty allow list", () => {
-  const actual = checkIgnoredRepos("mheap/demo", []);
+  const actual = checkAllowedRepos("mheap/demo", []);
   expect(actual).toBe(false);
 });
 
 test("no match", () => {
-  expect(checkIgnoredRepos("mheap/demo", ["other/repo"])).toBe(false);
+  expect(checkAllowedRepos("mheap/demo", ["other/repo"])).toBe(false);
 });
 
 test("exact match", () => {
-  expect(checkIgnoredRepos("mheap/demo", ["mheap/demo"])).toBe(true);
+  expect(checkAllowedRepos("mheap/demo", ["mheap/demo"])).toBe(true);
 });
 
 test("partial match", () => {
-  expect(checkIgnoredRepos("mheap/demo", ["mheap/*"])).toBe(true);
+  expect(checkAllowedRepos("mheap/demo", ["mheap/*"])).toBe(true);
 });
 
 test("no partial match", () => {
-  expect(checkIgnoredRepos("other/demo", ["mheap/*"])).toBe(false);
+  expect(checkAllowedRepos("other/demo", ["mheap/*"])).toBe(false);
 });
 
 test("multiple ignores", () => {
-  expect(checkIgnoredRepos("mheap/demo", ["other", "mheap/*"])).toBe(true);
+  expect(checkAllowedRepos("mheap/demo", ["other", "mheap/*"])).toBe(true);
 });
 
 test("negative ignores", () => {
-  expect(checkIgnoredRepos("other/demo", ["!mheap/*"])).toBe(true);
+  expect(checkAllowedRepos("other/demo", ["!mheap/*"])).toBe(true);
 });

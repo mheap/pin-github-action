@@ -3,10 +3,10 @@ const YAML = require("yaml");
 const extractActions = require("./extractActions");
 const replaceActions = require("./replaceActions");
 const findRefOnGithub = require("./findRefOnGithub");
-const checkIgnoredRepos = require("./checkIgnoredRepos");
+const checkAllowedRepos = require("./checkAllowedRepos");
 
-module.exports = async function(input, ignored) {
-  ignored = ignored || [];
+module.exports = async function(input, allowed) {
+  allowed = allowed || [];
 
   // Parse the workflow file
   let workflow = YAML.parseDocument(input);
@@ -17,7 +17,7 @@ module.exports = async function(input, ignored) {
   for (let i in actions) {
     // Should this action be updated?
     const action = `${actions[i].owner}/${actions[i].repo}`;
-    if (checkIgnoredRepos(action, ignored)) {
+    if (checkAllowedRepos(action, allowed)) {
       continue;
     }
 
@@ -26,7 +26,7 @@ module.exports = async function(input, ignored) {
     actions[i].newVersion = newVersion;
 
     // Rewrite each action, replacing the uses block with a specific sha
-    workflow = replaceActions(workflow, actions[i], ignored);
+    workflow = replaceActions(workflow, actions[i]);
   }
 
   return {

@@ -70,9 +70,9 @@ be updated to the latest available sha for your pinned ref.
 
 ## Leaving Actions unpinned
 
-To leave an action unpinned, pass the `--ignore` option when running `pin-github-action`.
+To leave an action unpinned, pass the `--allow` option when running `pin-github-action`.
 
-Running `pin-github-action /path/to/.github/workflows/your-name.yml --ignore "actions/*"` will turn this:
+Running `pin-github-action /path/to/.github/workflows/your-name.yml --allow "actions/*"` will turn this:
 
 ```yaml
 jobs:
@@ -97,7 +97,7 @@ jobs:
         uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@master
 ```
 
-You can pass multiple actions to ignore as a comma separated list e.g. `actions/checkout,mheap/*`
+You can pass multiple actions to allow as a comma separated list e.g. `actions/checkout,mheap/*`
 
 A quick overview of the available globbing patterns (taken from [multimatch](https://github.com/sindresorhus/multimatch), which we use to match globs):
 
