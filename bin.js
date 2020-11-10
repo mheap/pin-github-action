@@ -10,13 +10,21 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 (async () => {
   try {
     // Allow for command line arguments
-    program.version(packageDetails.version).parse(process.argv);
+    program
+      .version(packageDetails.version)
+      .option(
+        "-i, --ignore <actions>",
+        "comma separated list of actions to ignore e.g. mheap/debug-action. May be a glob e.g. mheap/*"
+      )
+      .parse(process.argv);
 
     const filename = program.args[0];
+    let ignored = program.opts().ignore;
+    ignored = (ignored || "").split(",").filter((r) => r);
 
     const input = fs.readFileSync(filename).toString();
 
-    const output = await run(input);
+    const output = await run(input, ignored);
 
     fs.writeFileSync(filename, output.workflow);
 
