@@ -21,9 +21,9 @@ jobs:
     name: nexmo/github-actions/submodule-auto-pr@master
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: nexmo/github-actions/submodule-auto-pr
-      uses: nexmo/github-actions/submodule-auto-pr@master
+      - uses: actions/checkout@master
+      - name: nexmo/github-actions/submodule-auto-pr
+        uses: nexmo/github-actions/submodule-auto-pr@master
 ```
 
 In to this:
@@ -68,14 +68,63 @@ GH_ADMIN_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/yo
 Run it as many times as you like! Each time you run the tool the exact sha will
 be updated to the latest available sha for your pinned ref.
 
+## Leaving Actions unpinned
+
+To leave an action unpinned, pass the `--allow` option when running `pin-github-action`.
+
+Running `pin-github-action /path/to/.github/workflows/your-name.yml --allow "actions/*"` will turn this:
+
+```yaml
+jobs:
+  build:
+    name: nexmo/github-actions/submodule-auto-pr@master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: nexmo/github-actions/submodule-auto-pr@master
+```
+
+Into this (notice how `actions/checkout@master` is ignored):
+
+```yaml
+jobs:
+  build:
+    name: nexmo/github-actions/submodule-auto-pr@master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: nexmo/github-actions/submodule-auto-pr
+        uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@master
+```
+
+You can pass multiple actions to allow as a comma separated list e.g. `actions/checkout,mheap/*`
+
+A quick overview of the available globbing patterns (taken from [multimatch](https://github.com/sindresorhus/multimatch), which we use to match globs):
+
+- `*` matches any number of characters, but not `/`
+- `?` matches a single character, but not `/`
+- `**` matches any number of characters, including `/`, as long as it's the only thing in a path part
+- `{}` allows for a comma-separated list of "or" expressions
+- `!` at the beginning of a pattern will negate the match
+
+Examples:
+
+- Exact match: `actions/checkout`
+- Partial match: `actions/*`
+- Negated match: `!actions/*` (will only pin `actions/*` actions)
+
 ## How it works
 
-* Load the workflow file provided
-* Tokenise it in to an AST
-* Extract all `uses` steps, skipping any `docker://` or `./local-path` actions
-* Loop through all `uses` steps to determine the target ref
-  * If there's a comment in the step, remove `pin@` and use that as the target
-  * Otherwise, fall back to the ref in the action as the default
-* Look up the current sha for each repo on GitHub and update the action to use the specific hash
-  * If needed, add a comment with the target pinned version
-* Write the workflow file with the new pinned version and original target version as a comment
+- Load the workflow file provided
+- Tokenise it in to an AST
+- Extract all `uses` steps, skipping any `docker://` or `./local-path` actions
+- Loop through all `uses` steps to determine the target ref
+  - If there's a comment in the step, remove `pin@` and use that as the target
+  - Otherwise, fall back to the ref in the action as the default
+- Look up the current sha for each repo on GitHub and update the action to use the specific hash
+  - If needed, add a comment with the target pinned version
+- Write the workflow file with the new pinned version and original target version as a comment
+
+```
+
+```

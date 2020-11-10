@@ -10,13 +10,21 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 (async () => {
   try {
     // Allow for command line arguments
-    program.version(packageDetails.version).parse(process.argv);
+    program
+      .version(packageDetails.version)
+      .option(
+        "-a, --allow <actions>",
+        "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
+      )
+      .parse(process.argv);
 
     const filename = program.args[0];
+    let allowed = program.opts().allow;
+    allowed = (allowed || "").split(",").filter(r => r);
 
     const input = fs.readFileSync(filename).toString();
 
-    const output = await run(input);
+    const output = await run(input, allowed);
 
     fs.writeFileSync(filename, output.workflow);
 
