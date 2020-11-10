@@ -31,6 +31,6 @@ module.exports = async function(input, allowed) {
 
   return {
     workflow: workflow.toString(),
-    actions,
+    actions
   };
 };

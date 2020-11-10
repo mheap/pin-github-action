@@ -20,7 +20,7 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 
     const filename = program.args[0];
     let allowed = program.opts().allow;
-    allowed = (allowed || "").split(",").filter((r) => r);
+    allowed = (allowed || "").split(",").filter(r => r);
 
     const input = fs.readFileSync(filename).toString();
 
