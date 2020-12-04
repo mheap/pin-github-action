@@ -280,6 +280,40 @@ test("throws with missing uses", () => {
   expect(actual).toThrow("No Actions detected");
 });
 
+test("does not throw when mixing run and uses", () => {
+  const input = convertToAst({
+    name: "PR",
+    on: ["pull_request"],
+    jobs: {
+      "test-job": {
+        "runs-on": "ubuntu-latest",
+        steps: [
+          {
+            name: "Test Action Step",
+            run: "echo 'Hello World'"
+          },
+          {
+            name: "With An Action",
+            uses: "mheap/test-action@master"
+          }
+        ]
+      }
+    }
+  });
+
+  const actual = extractActions(input);
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "master",
+      pinnedVersion: "master"
+    }
+  ]);
+});
+
 function convertToAst(input) {
   return YAML.parseDocument(YAML.stringify(input));
 }

@@ -21,10 +21,11 @@ module.exports = function(input) {
       throw new Error("No job.steps found");
     }
 
+    let actionsDetected = false;
     for (let step of steps) {
       const uses = step.items.filter(n => n.key == "uses");
-      if (!uses.length) {
-        throw new Error("No Actions detected");
+      if (uses.length) {
+        actionsDetected = true;
       }
       for (let use of uses) {
         const line = use.value.value.toString();
@@ -44,6 +45,10 @@ module.exports = function(input) {
 
         actions.add({ ...details, pinnedVersion: original });
       }
+    }
+
+    if (!actionsDetected) {
+      throw new Error("No Actions detected");
     }
   }
 
