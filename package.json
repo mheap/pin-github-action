@@ -25,7 +25,7 @@
   "dependencies": {
     "@octokit/rest": "^16.35.2",
     "commander": "^4.0.1",
-    "matcher": "^3.0.0",
+    "matcher": "^4.0.0",
     "yaml": "^1.7.2"
   },
   "bin": {
