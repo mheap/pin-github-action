@@ -18,12 +18,12 @@ on:
       - master
 jobs:
   build:
-    name: nexmo/github-actions/submodule-auto-pr@master
+    name: nexmo/github-actions/submodule-auto-pr@main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       - name: nexmo/github-actions/submodule-auto-pr
-        uses: nexmo/github-actions/submodule-auto-pr@master
+        uses: nexmo/github-actions/submodule-auto-pr@main
 ```
 
 In to this:
@@ -36,12 +36,12 @@ on:
       - master
 jobs:
   build:
-    name: nexmo/github-actions/submodule-auto-pr@master
+    name: nexmo/github-actions/submodule-auto-pr@main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@db41740e12847bb616a339b75eb9414e711417df # pin@master
+      - uses: actions/checkout@db41740e12847bb616a339b75eb9414e711417df # pin@main
       - name: nexmo/github-actions/submodule-auto-pr
-        uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@master
+        uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@main
 ```
 
 For more information, see [How it works](#how-it-works).
@@ -77,24 +77,24 @@ Running `pin-github-action /path/to/.github/workflows/your-name.yml --allow "act
 ```yaml
 jobs:
   build:
-    name: nexmo/github-actions/submodule-auto-pr@master
+    name: nexmo/github-actions/submodule-auto-pr@main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: nexmo/github-actions/submodule-auto-pr@master
+      - uses: actions/checkout@main
+      - uses: nexmo/github-actions/submodule-auto-pr@main
 ```
 
-Into this (notice how `actions/checkout@master` is ignored):
+Into this (notice how `actions/checkout@main` is ignored):
 
 ```yaml
 jobs:
   build:
-    name: nexmo/github-actions/submodule-auto-pr@master
+    name: nexmo/github-actions/submodule-auto-pr@main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       - name: nexmo/github-actions/submodule-auto-pr
-        uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@master
+        uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@main
 ```
 
 You can pass multiple actions to allow as a comma separated list e.g. `actions/checkout,mheap/*`
