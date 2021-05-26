@@ -4,9 +4,11 @@ const extractActions = require("./extractActions");
 const replaceActions = require("./replaceActions");
 const findRefOnGithub = require("./findRefOnGithub");
 const checkAllowedRepos = require("./checkAllowedRepos");
+const isSha = require("./isSha");
 
-module.exports = async function(input, allowed) {
+module.exports = async function(input, allowed, ignoreShas) {
   allowed = allowed || [];
+  ignoreShas = ignoreShas || false;
 
   // Parse the workflow file
   let workflow = YAML.parseDocument(input);
@@ -18,6 +20,10 @@ module.exports = async function(input, allowed) {
     // Should this action be updated?
     const action = `${actions[i].owner}/${actions[i].repo}`;
     if (checkAllowedRepos(action, allowed)) {
+      continue;
+    }
+
+    if (ignoreShas && isSha(actions[i])) {
       continue;
     }
 

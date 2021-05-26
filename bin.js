@@ -16,15 +16,20 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-a, --allow <actions>",
         "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
       )
+      .option(
+        "-i, --ignore-shas",
+        "do not update any commits that are pinned at a sha"
+      )
       .parse(process.argv);
 
     const filename = program.args[0];
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter(r => r);
+    let ignoreShas = program.opts().ignoreShas;
 
     const input = fs.readFileSync(filename).toString();
 
-    const output = await run(input, allowed);
+    const output = await run(input, allowed, ignoreShas);
 
     fs.writeFileSync(filename, output.workflow);
 
