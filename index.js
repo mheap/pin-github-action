@@ -6,7 +6,7 @@ const findRefOnGithub = require("./findRefOnGithub");
 const checkAllowedRepos = require("./checkAllowedRepos");
 const isSha = require("./isSha");
 
-module.exports = async function(input, allowed, ignoreShas) {
+module.exports = async function (input, allowed, ignoreShas) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
 
@@ -37,6 +37,6 @@ module.exports = async function(input, allowed, ignoreShas) {
 
   return {
     workflow: workflow.toString(),
-    actions
+    actions,
   };
 };

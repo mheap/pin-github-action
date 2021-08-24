@@ -7,7 +7,7 @@ const action = {
   repo: "github-actions",
   path: "",
   pinnedVersion: "master",
-  currentVersion: "master"
+  currentVersion: "master",
 };
 
 afterEach(() => {
@@ -24,7 +24,7 @@ afterEach(() => {
 test("looks up a specific hash", async () => {
   const testAction = {
     ...action,
-    pinnedVersion: "73549280c1c566830040d9a01fe9050dae6a3036"
+    pinnedVersion: "73549280c1c566830040d9a01fe9050dae6a3036",
   };
   mockRefLookupFailure(
     testAction,
@@ -91,8 +91,8 @@ function mockBranchRefLookupSuccess(action, path, sha) {
     ref: `refs/${path}`,
     object: {
       sha: sha,
-      type: "commit"
-    }
+      type: "commit",
+    },
   };
   nock("https://api.github.com")
     .get(`/repos/${action.owner}/${action.repo}/git/ref/${path}`)
@@ -105,8 +105,8 @@ function mockTagRefLookupSuccess(action, path, sha) {
     ref: `refs/${path}`,
     object: {
       sha: sha,
-      type: "tag"
-    }
+      type: "tag",
+    },
   };
   nock("https://api.github.com")
     .get(`/repos/${action.owner}/${action.repo}/git/ref/${path}`)
@@ -117,8 +117,8 @@ function mockTagLookupSuccess(action, tagSha, commitSha) {
   const data = {
     object: {
       sha: commitSha,
-      type: "commit"
-    }
+      type: "commit",
+    },
   };
 
   nock("https://api.github.com")
@@ -130,7 +130,7 @@ function mockCommitLookupSuccess(action, commitSha) {
   nock("https://api.github.com")
     .get(`/repos/${action.owner}/${action.repo}/commits/${commitSha}`)
     .reply(200, {
-      sha: commitSha
+      sha: commitSha,
     });
 }
 

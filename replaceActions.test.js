@@ -7,7 +7,7 @@ const action = {
   path: "",
   pinnedVersion: "master",
   currentVersion: "master",
-  newVersion: "sha-here"
+  newVersion: "sha-here",
 };
 
 test("replaces a single action with a sha", () => {
@@ -20,11 +20,11 @@ test("replaces a single action with a sha", () => {
         steps: [
           {
             name: "test action step",
-            uses: "mheap/test-action@master"
-          }
-        ]
-      }
-    }
+            uses: "mheap/test-action@master",
+          },
+        ],
+      },
+    },
   });
 
   const actual = replaceActions(input, { ...action }).toString();
@@ -42,18 +42,18 @@ test("replaces an existing sha with a different sha, not changing the pinned bra
         steps: [
           {
             name: "test action step",
-            uses: "mheap/test-action@sha-one"
-          }
-        ]
-      }
-    }
+            uses: "mheap/test-action@sha-one",
+          },
+        ],
+      },
+    },
   });
 
   const actual = replaceActions(input, {
     ...action,
     pinnedVersion: "v1",
     currentVersion: "sha-one",
-    newVersion: "sha-two"
+    newVersion: "sha-two",
   }).toString();
 
   expect(actual).toContain("uses: mheap/test-action@sha-two # pin@v1");

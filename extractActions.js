@@ -1,7 +1,7 @@
-module.exports = function(input) {
+module.exports = function (input) {
   let actions = new Set();
 
-  let jobs = input.contents.items.filter(n => n.key == "jobs");
+  let jobs = input.contents.items.filter((n) => n.key == "jobs");
   if (!jobs.length) {
     throw new Error("No jobs found");
   }
@@ -11,7 +11,7 @@ module.exports = function(input) {
   }
 
   for (let job of jobs) {
-    let steps = job.value.items.filter(n => n.key == "steps");
+    let steps = job.value.items.filter((n) => n.key == "steps");
     if (!steps.length) {
       throw new Error("No job.steps found");
     }
@@ -23,7 +23,7 @@ module.exports = function(input) {
 
     let actionsDetected = false;
     for (let step of steps) {
-      const uses = step.items.filter(n => n.key == "uses");
+      const uses = step.items.filter((n) => n.key == "uses");
       if (uses.length) {
         actionsDetected = true;
       }

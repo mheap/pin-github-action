@@ -1,10 +1,10 @@
 const { Octokit } = require("@octokit/rest");
 const github = new Octokit({
-  auth: process.env.GH_ADMIN_TOKEN
+  auth: process.env.GH_ADMIN_TOKEN,
 });
 
-module.exports = function(action) {
-  return new Promise(async function(resolve, reject) {
+module.exports = function (action) {
+  return new Promise(async function (resolve, reject) {
     const owner = action.owner;
     const repo = action.repo;
     const pinned = action.pinnedVersion;
@@ -17,7 +17,7 @@ module.exports = function(action) {
           await github.git.getRef({
             owner,
             repo,
-            ref
+            ref,
           })
         ).data.object;
 
@@ -27,7 +27,7 @@ module.exports = function(action) {
           const tag = await github.git.getTag({
             owner,
             repo,
-            tag_sha: object.sha
+            tag_sha: object.sha,
           });
           return resolve(tag.data.object.sha);
         }
@@ -47,7 +47,7 @@ module.exports = function(action) {
       const commit = await github.repos.getCommit({
         owner,
         repo,
-        ref: pinned
+        ref: pinned,
       });
       return resolve(commit.data.sha);
     } catch (e) {

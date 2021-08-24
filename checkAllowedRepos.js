@@ -1,6 +1,6 @@
 const matcher = require("matcher");
 
-module.exports = function(input, ignored) {
+module.exports = function (input, ignored) {
   // Nothing ignored, so it can't match
   if (ignored.length === 0) {
     return false;

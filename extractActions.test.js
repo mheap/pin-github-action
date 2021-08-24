@@ -11,11 +11,11 @@ test("extracts a single version", () => {
         steps: [
           {
             name: "Test Action Step",
-            uses: "mheap/test-action@master"
-          }
-        ]
-      }
-    }
+            uses: "mheap/test-action@master",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -26,8 +26,8 @@ test("extracts a single version", () => {
       repo: "test-action",
       path: "",
       currentVersion: "master",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
@@ -51,8 +51,8 @@ test("extracts a pinned version", () => {
       repo: "test-action",
       path: "",
       currentVersion: "abc123",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
@@ -66,11 +66,11 @@ test("extracts a single version in a subfolder", () => {
         steps: [
           {
             name: "Test Action Step",
-            uses: "mheap/test-action/action-one/src@master"
-          }
-        ]
-      }
-    }
+            uses: "mheap/test-action/action-one/src@master",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -80,8 +80,8 @@ test("extracts a single version in a subfolder", () => {
       repo: "test-action",
       path: "action-one/src",
       currentVersion: "master",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
@@ -95,24 +95,24 @@ test("extracts a complex version", () => {
         steps: [
           {
             name: "Test Action Step",
-            uses: "mheap/test-action@master"
+            uses: "mheap/test-action@master",
           },
           {
             name: "Another Step",
-            uses: "mheap/second-action@v1"
-          }
-        ]
+            uses: "mheap/second-action@v1",
+          },
+        ],
       },
       "separate-job": {
         "runs-on": "ubuntu-latest",
         steps: [
           {
             name: "Parallel Job Step",
-            uses: "mheap/separate-action@v2.1.5"
-          }
-        ]
-      }
-    }
+            uses: "mheap/separate-action@v2.1.5",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -122,22 +122,22 @@ test("extracts a complex version", () => {
       repo: "test-action",
       path: "",
       currentVersion: "master",
-      pinnedVersion: "master"
+      pinnedVersion: "master",
     },
     {
       owner: "mheap",
       repo: "second-action",
       path: "",
       currentVersion: "v1",
-      pinnedVersion: "v1"
+      pinnedVersion: "v1",
     },
     {
       owner: "mheap",
       repo: "separate-action",
       path: "",
       currentVersion: "v2.1.5",
-      pinnedVersion: "v2.1.5"
-    }
+      pinnedVersion: "v2.1.5",
+    },
   ]);
 });
 
@@ -151,15 +151,15 @@ test("skips docker actions", () => {
         steps: [
           {
             name: "Test Action Step",
-            uses: "mheap/test-action@master"
+            uses: "mheap/test-action@master",
           },
           {
             name: "Docker Step",
-            uses: "docker://alpine:3.8"
-          }
-        ]
-      }
-    }
+            uses: "docker://alpine:3.8",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -169,8 +169,8 @@ test("skips docker actions", () => {
       repo: "test-action",
       path: "",
       currentVersion: "master",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
@@ -184,15 +184,15 @@ test("skips local actions", () => {
         steps: [
           {
             name: "Test Action Step",
-            uses: "mheap/test-action@master"
+            uses: "mheap/test-action@master",
           },
           {
             name: "Local Step",
-            uses: "./local-action"
-          }
-        ]
-      }
-    }
+            uses: "./local-action",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -202,15 +202,15 @@ test("skips local actions", () => {
       repo: "test-action",
       path: "",
       currentVersion: "master",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
 test("throws with missing jobs", () => {
   const input = convertToAst({
     name: "PR",
-    on: ["pull_request"]
+    on: ["pull_request"],
   });
 
   const actual = () => extractActions(input);
@@ -221,7 +221,7 @@ test("throws with empty jobs", () => {
   const input = convertToAst({
     name: "PR",
     on: ["pull_request"],
-    jobs: {}
+    jobs: {},
   });
 
   const actual = () => extractActions(input);
@@ -234,9 +234,9 @@ test("throws with missing steps", () => {
     on: ["pull_request"],
     jobs: {
       "test-job": {
-        "runs-on": "ubuntu-latest"
-      }
-    }
+        "runs-on": "ubuntu-latest",
+      },
+    },
   });
 
   const actual = () => extractActions(input);
@@ -250,9 +250,9 @@ test("throws with empty steps", () => {
     jobs: {
       "test-job": {
         "runs-on": "ubuntu-latest",
-        steps: []
-      }
-    }
+        steps: [],
+      },
+    },
   });
 
   const actual = () => extractActions(input);
@@ -269,11 +269,11 @@ test("throws with missing uses", () => {
         steps: [
           {
             name: "Test Action Step",
-            run: "echo 'Hello World'"
-          }
-        ]
-      }
-    }
+            run: "echo 'Hello World'",
+          },
+        ],
+      },
+    },
   });
 
   const actual = () => extractActions(input);
@@ -290,15 +290,15 @@ test("does not throw when mixing run and uses", () => {
         steps: [
           {
             name: "Test Action Step",
-            run: "echo 'Hello World'"
+            run: "echo 'Hello World'",
           },
           {
             name: "With An Action",
-            uses: "mheap/test-action@master"
-          }
-        ]
-      }
-    }
+            uses: "mheap/test-action@master",
+          },
+        ],
+      },
+    },
   });
 
   const actual = extractActions(input);
@@ -309,8 +309,8 @@ test("does not throw when mixing run and uses", () => {
       repo: "test-action",
       path: "",
       currentVersion: "master",
-      pinnedVersion: "master"
-    }
+      pinnedVersion: "master",
+    },
   ]);
 });
 
