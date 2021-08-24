@@ -23,6 +23,12 @@ const packageDetails = require(path.join(__dirname, "package.json"));
       .parse(process.argv);
 
     const filename = program.args[0];
+
+    if (!filename){
+      console.log("Usage: pin-github-action /path/to/workflow.yml");
+      process.exit(1);
+    }
+
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter(r => r);
     let ignoreShas = program.opts().ignoreShas;
