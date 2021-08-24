@@ -23,7 +23,7 @@
     "prettier": "^1.19.1"
   },
   "dependencies": {
-    "@octokit/rest": "^16.35.2",
+    "@octokit/rest": "^18",
     "commander": "^4.0.1",
     "matcher": "^4.0.0",
     "yaml": "^1.7.2"

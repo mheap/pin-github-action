@@ -79,12 +79,14 @@ test("fails to find ref", () => {
 });
 
 function mockRefLookupFailure(action, path) {
+  path = path.replace("/", "%2F");
   nock("https://api.github.com")
     .get(`/repos/${action.owner}/${action.repo}/git/ref/${path}`)
     .reply(404);
 }
 
 function mockBranchRefLookupSuccess(action, path, sha) {
+  path = path.replace("/", "%2F");
   const data = {
     ref: `refs/${path}`,
     object: {
@@ -98,6 +100,7 @@ function mockBranchRefLookupSuccess(action, path, sha) {
 }
 
 function mockTagRefLookupSuccess(action, path, sha) {
+  path = path.replace("/", "%2F");
   const data = {
     ref: `refs/${path}`,
     object: {

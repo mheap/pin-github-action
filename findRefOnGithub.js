@@ -1,4 +1,4 @@
-const Octokit = require("@octokit/rest");
+const { Octokit } = require("@octokit/rest");
 const github = new Octokit({
   auth: process.env.GH_ADMIN_TOKEN
 });
