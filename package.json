@@ -16,17 +16,17 @@
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^24.9.0",
-    "nock": "^11.7.0",
-    "prettier": "^1.19.1"
+    "eslint": "^7",
+    "eslint-plugin-prettier": "^3",
+    "jest": "^27",
+    "nock": "^13",
+    "prettier": "^2"
   },
   "dependencies": {
     "@octokit/rest": "^18",
-    "commander": "^4.0.1",
+    "commander": "^8",
     "matcher": "^4.0.0",
-    "yaml": "^1.7.2"
+    "yaml": "^1"
   },
   "bin": {
     "pin-github-action": "bin.js"
