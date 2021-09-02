@@ -20,6 +20,10 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-i, --ignore-shas",
         "do not update any commits that are pinned at a sha"
       )
+      .option(
+        "-e, --allow-empty",
+        "allow workflows that do not contain any actions"
+      )
       .parse(process.argv);
 
     const filename = program.args[0];
@@ -35,7 +39,8 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 
     const input = fs.readFileSync(filename).toString();
 
-    const output = await run(input, allowed, ignoreShas);
+    let allowEmpty = program.opts().allowEmpty;
+    const output = await run(input, allowed, ignoreShas, allowEmpty);
 
     fs.writeFileSync(filename, output.workflow);
 

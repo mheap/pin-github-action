@@ -6,7 +6,7 @@ const findRefOnGithub = require("./findRefOnGithub");
 const checkAllowedRepos = require("./checkAllowedRepos");
 const isSha = require("./isSha");
 
-module.exports = async function (input, allowed, ignoreShas) {
+module.exports = async function (input, allowed, ignoreShas, allowEmpty) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
 
@@ -14,7 +14,7 @@ module.exports = async function (input, allowed, ignoreShas) {
   let workflow = YAML.parseDocument(input);
 
   // Extract list of actions
-  let actions = extractActions(workflow);
+  let actions = extractActions(workflow, allowEmpty);
 
   for (let i in actions) {
     // Should this action be updated?
