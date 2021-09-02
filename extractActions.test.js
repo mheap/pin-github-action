@@ -280,6 +280,27 @@ test("throws with missing uses", () => {
   expect(actual).toThrow("No Actions detected");
 });
 
+test("does not throw with missing uses when allowEmpty is enabled", () => {
+  const input = convertToAst({
+    name: "PR",
+    on: ["pull_request"],
+    jobs: {
+      "test-job": {
+        "runs-on": "ubuntu-latest",
+        steps: [
+          {
+            name: "Test Action Step",
+            run: "echo 'Hello World'",
+          },
+        ],
+      },
+    },
+  });
+
+  const actual = extractActions(input, true);
+  expect(actual).toEqual([]);
+});
+
 test("does not throw when mixing run and uses", () => {
   const input = convertToAst({
     name: "PR",

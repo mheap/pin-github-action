@@ -1,4 +1,4 @@
-module.exports = function (input) {
+module.exports = function (input, allowEmpty) {
   let actions = new Set();
 
   let jobs = input.contents.items.filter((n) => n.key == "jobs");
@@ -47,7 +47,7 @@ module.exports = function (input) {
       }
     }
 
-    if (!actionsDetected) {
+    if (!actionsDetected && !allowEmpty) {
       throw new Error("No Actions detected");
     }
   }
