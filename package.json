@@ -1,6 +1,6 @@
 {
   "name": "pin-github-action",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Pin your GitHub Actions to specific versions automatically!",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7",
+    "eslint": "^8",
     "eslint-plugin-prettier": "^3",
     "jest": "^27",
     "nock": "^13",
