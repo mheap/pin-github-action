@@ -335,6 +335,33 @@ test("does not throw when mixing run and uses", () => {
   ]);
 });
 
+test("extracts from composite actions", () => {
+  const input = convertToAst({
+    name: "Sample Composite",
+    runs: {
+      using: "composite",
+      steps: [
+        {
+          name: "With An Action",
+          uses: "mheap/test-action@master",
+        },
+      ],
+    },
+  });
+
+  const actual = extractActions(input);
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "master",
+      pinnedVersion: "master",
+    },
+  ]);
+});
+
 function convertToAst(input) {
   return YAML.parseDocument(YAML.stringify(input));
 }
