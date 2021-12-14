@@ -10,7 +10,7 @@ const action = {
   newVersion: "sha-here",
 };
 
-test("replaces a single action with a sha", () => {
+test("replaces a single action with a sha (workflow)", () => {
   const input = convertToAst({
     name: "PR",
     on: ["pull_request"],
@@ -24,6 +24,25 @@ test("replaces a single action with a sha", () => {
           },
         ],
       },
+    },
+  });
+
+  const actual = replaceActions(input, { ...action }).toString();
+
+  expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
+});
+
+test("replaces a single action with a sha (composite)", () => {
+  const input = convertToAst({
+    name: "Sample Composite",
+    runs: {
+      using: "composite",
+      steps: [
+        {
+          name: "With An Action",
+          uses: "mheap/test-action@master",
+        },
+      ],
     },
   });
 
