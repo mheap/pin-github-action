@@ -1,10 +1,14 @@
-module.exports = function (input, allowEmpty) {
+let debug = () => {};
+module.exports = function (input, allowEmpty, log) {
+  debug = log.extend("extract-actions");
   // Check if it's a composite action
   let runs = input.contents.items.filter((n) => n.key == "runs");
   if (runs.length) {
+    debug("Processing composite action");
     return extractFromComposite(input, allowEmpty);
   }
 
+  debug("Processing workflow");
   return extractFromWorkflow(input, allowEmpty);
 };
 
@@ -66,9 +70,11 @@ function handleStep(actions, step) {
     const line = use.value.value.toString();
 
     if (line.substr(0, 9) == "docker://") {
+      debug(`Skipping docker:// action: '${line}'`);
       continue;
     }
     if (line.substr(0, 2) == "./") {
+      debug(`Skipping local action: '${line}'`);
       continue;
     }
 

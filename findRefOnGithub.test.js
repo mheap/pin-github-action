@@ -1,6 +1,11 @@
-const findRef = require("./findRefOnGithub");
 const nock = require("nock");
 nock.disableNetConnect();
+
+const debug = require("debug")("pin-github-action-test");
+const run = require("./findRefOnGithub");
+const findRef = (action) => {
+  return run.apply(null, [action, debug]);
+};
 
 const action = {
   owner: "nexmo",

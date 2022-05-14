@@ -1,4 +1,8 @@
-const checkAllowedRepos = require("./checkAllowedRepos");
+const debug = require("debug")("pin-github-action-test");
+const run = require("./checkAllowedRepos");
+const checkAllowedRepos = (input, ignore) => {
+  return run.apply(null, [input, ignore, debug]);
+};
 
 test("empty allow list", () => {
   const actual = checkAllowedRepos("mheap/demo", []);
