@@ -9,6 +9,8 @@ module.exports = function (action) {
     const repo = action.repo;
     const pinned = action.pinnedVersion;
 
+    let error;
+
     // In order: Tag, Branch
     const possibleRefs = [`tags/${pinned}`, `heads/${pinned}`];
     for (let ref of possibleRefs) {
@@ -39,6 +41,7 @@ module.exports = function (action) {
       } catch (e) {
         // We can ignore failures as we validate later
         //console.log(e);
+        error = handleCommonErrors(e);
       }
     }
 
@@ -53,10 +56,22 @@ module.exports = function (action) {
     } catch (e) {
       // If it's not a commit, it doesn't matter
       //console.log(e);
+      error = handleCommonErrors(e);
     }
 
     return reject(
-      `Unable to find SHA for ${owner}/${repo}@${pinned}\nPrivate repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA`
+      `Unable to find SHA for ${owner}/${repo}@${pinned}\n${error}`
     );
   });
 };
+
+function handleCommonErrors(e) {
+  if (e.status == 404) {
+    return "Private repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA";
+  }
+
+  if (e.message.includes("API rate limit exceeded")) {
+    return e.message;
+  }
+  return;
+}

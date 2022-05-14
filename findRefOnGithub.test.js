@@ -69,12 +69,21 @@ test("looks up a branch", async () => {
   expect(actual).toEqual("73549280c1c566830040d9a01fe9050dae6a3036");
 });
 
-test("fails to find ref", () => {
+test("fails to find ref (404)", () => {
   mockRefLookupFailure(action, "tags/master");
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupFailure(action, "master");
   return expect(findRef(action)).rejects.toEqual(
     `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA`
+  );
+});
+
+test("fails to find ref (rate limiting)", () => {
+  mockRefLookupFailure(action, "tags/master");
+  mockRefLookupFailure(action, "heads/master");
+  mockCommitLookupRateLimit(action, "master");
+  return expect(findRef(action)).rejects.toEqual(
+    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`
   );
 });
 
@@ -138,4 +147,13 @@ function mockCommitLookupFailure(action, commitSha) {
   nock("https://api.github.com")
     .get(`/repos/${action.owner}/${action.repo}/commits/${commitSha}`)
     .reply(404);
+}
+
+function mockCommitLookupRateLimit(action, commitSha) {
+  nock("https://api.github.com")
+    .get(`/repos/${action.owner}/${action.repo}/commits/${commitSha}`)
+    .reply(
+      429,
+      "API rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)"
+    );
 }
