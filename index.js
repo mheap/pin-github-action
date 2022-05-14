@@ -6,7 +6,13 @@ const findRefOnGithub = require("./findRefOnGithub");
 const checkAllowedRepos = require("./checkAllowedRepos");
 const isSha = require("./isSha");
 
-module.exports = async function (input, allowed, ignoreShas, allowEmpty) {
+module.exports = async function (
+  input,
+  allowed,
+  ignoreShas,
+  allowEmpty,
+  debug
+) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
 
@@ -14,12 +20,12 @@ module.exports = async function (input, allowed, ignoreShas, allowEmpty) {
   let workflow = YAML.parseDocument(input);
 
   // Extract list of actions
-  let actions = extractActions(workflow, allowEmpty);
+  let actions = extractActions(workflow, allowEmpty, debug);
 
   for (let i in actions) {
     // Should this action be updated?
     const action = `${actions[i].owner}/${actions[i].repo}`;
-    if (checkAllowedRepos(action, allowed)) {
+    if (checkAllowedRepos(action, allowed, debug)) {
       continue;
     }
 
@@ -28,7 +34,7 @@ module.exports = async function (input, allowed, ignoreShas, allowEmpty) {
     }
 
     // Look up those actions on Github
-    const newVersion = await findRefOnGithub(actions[i]);
+    const newVersion = await findRefOnGithub(actions[i], debug);
     actions[i].newVersion = newVersion;
 
     // Rewrite each action, replacing the uses block with a specific sha

@@ -1,5 +1,10 @@
-const extractActions = require("./extractActions");
 const YAML = require("yaml");
+const debug = require("debug")("pin-github-action-test");
+
+const run = require("./extractActions");
+const extractActions = (input, allowEmpty) => {
+  return run.apply(null, [input, allowEmpty, debug]);
+};
 
 test("extracts a single version", () => {
   const input = convertToAst({

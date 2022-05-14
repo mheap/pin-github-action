@@ -68,6 +68,13 @@ GH_ADMIN_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/yo
 Run it as many times as you like! Each time you run the tool the exact sha will
 be updated to the latest available sha for your pinned ref.
 
+If you're having issues, run with debug logging enabled and open an issue:
+
+```bash
+DEBUG="pin-github-action*" pin-github-action /path/to/.github/workflows/your-name.yml
+
+```
+
 ## Leaving Actions unpinned
 
 To leave an action unpinned, pass the `--allow` option when running `pin-github-action`.

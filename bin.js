@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");
+const debug = require("debug")("pin-github-action");
 
 const run = require(".");
 
@@ -40,7 +41,7 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     const input = fs.readFileSync(filename).toString();
 
     let allowEmpty = program.opts().allowEmpty;
-    const output = await run(input, allowed, ignoreShas, allowEmpty);
+    const output = await run(input, allowed, ignoreShas, allowEmpty, debug);
 
     fs.writeFileSync(filename, output.workflow);
 

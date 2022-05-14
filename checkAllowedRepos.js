@@ -1,6 +1,8 @@
 const matcher = require("matcher");
 
-module.exports = function (input, ignored) {
+let debug = () => {};
+module.exports = function (input, ignored, log) {
+  debug = log.extend("check-allowed-repos");
   // Nothing ignored, so it can't match
   if (ignored.length === 0) {
     return false;
@@ -8,9 +10,15 @@ module.exports = function (input, ignored) {
 
   // Exact match
   if (ignored.includes(input)) {
+    debug(`Skipping ${input} due to exact match in ${ignored}`);
     return true;
   }
 
   // Glob match
-  return matcher([input], ignored).length > 0;
+  const isMatch = matcher([input], ignored).length > 0;
+
+  if (isMatch) {
+    debug(`Skipping ${input} due to pattern match in ${ignored}`);
+  }
+  return isMatch;
 };
