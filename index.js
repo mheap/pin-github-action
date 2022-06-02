@@ -11,7 +11,8 @@ module.exports = async function (
   allowed,
   ignoreShas,
   allowEmpty,
-  debug
+  debug,
+  literal
 ) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
@@ -38,7 +39,7 @@ module.exports = async function (
     actions[i].newVersion = newVersion;
 
     // Rewrite each action, replacing the uses block with a specific sha
-    workflow = replaceActions(workflow, actions[i]);
+    workflow = replaceActions(workflow, actions[i],literal,input);
   }
 
   return {

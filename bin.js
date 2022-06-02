@@ -25,6 +25,14 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-e, --allow-empty",
         "allow workflows that do not contain any actions"
       )
+      .option(
+        "-l, --literal",
+        "replace unparsed text rather than parsed YAML to preserve formatting"
+      )
+      .option(
+        "-I, --in-place",
+        "write directly to input file instead of stdout"
+      )
       .parse(process.argv);
 
     const filename = program.args[0];
@@ -37,13 +45,19 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
+    let literal = program.opts().literal || false;
+    let inPlace = program.opts().inPlace || false;
 
     const input = fs.readFileSync(filename).toString();
 
     let allowEmpty = program.opts().allowEmpty;
-    const output = await run(input, allowed, ignoreShas, allowEmpty, debug);
+    const output = await run(input, allowed, ignoreShas, allowEmpty, debug, literal);
 
-    fs.writeFileSync(filename, output.workflow);
+    if (inPlace){
+      fs.writeFileSync(filename, output.workflow);
+    } else {
+      process.stdout.write(output.workflow);
+    }
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
     // and generate a PR to update the actions to the latest version. This allows them a
@@ -53,7 +67,7 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     // Should we support auto-assigning the PR using INPUT_ASSIGNEE? I think so, but make
     // it optional
   } catch (e) {
-    console.log(e.message || e);
+    process.stderr.write(e.message || e);
     process.exit(1);
   }
 })();
