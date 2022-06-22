@@ -25,6 +25,16 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-e, --allow-empty",
         "allow workflows that do not contain any actions"
       )
+      .option(
+        "-l, --yaml-line-width <width>",
+        "set maximum output width before a line break",
+        "120"
+      )
+      .option(
+        "-n, --yaml-null-str <string>",
+        "set string representation for null values",
+        "null"
+      )
       .parse(process.argv);
 
     const filename = program.args[0];
@@ -37,11 +47,13 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
+    let allowEmpty = program.opts().allowEmpty;
+    let yamlLineWidth = program.opts().yamlLineWidth;
+    let yamlNullStr = program.opts().yamlNullStr;
 
     const input = fs.readFileSync(filename).toString();
 
-    let allowEmpty = program.opts().allowEmpty;
-    const output = await run(input, allowed, ignoreShas, allowEmpty, debug);
+    const output = await run(input, allowed, ignoreShas, allowEmpty, debug, yamlLineWidth, yamlNullStr);
 
     fs.writeFileSync(filename, output.workflow);
 

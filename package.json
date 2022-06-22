@@ -1,6 +1,6 @@
 {
   "name": "pin-github-action",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Pin your GitHub Actions to specific versions automatically!",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "commander": "^8",
     "debug": "^4.3.4",
     "matcher": "^4.0.0",
-    "yaml": "^1"
+    "yaml": "^2.1.1"
   },
   "bin": {
     "pin-github-action": "bin.js"
