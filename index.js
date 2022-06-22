@@ -11,7 +11,9 @@ module.exports = async function (
   allowed,
   ignoreShas,
   allowEmpty,
-  debug
+  debug,
+  yamlLineWidth, 
+  yamlNullStr
 ) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
@@ -41,8 +43,12 @@ module.exports = async function (
     workflow = replaceActions(workflow, actions[i]);
   }
 
+  stringOpts = {
+    'lineWidth':yamlLineWidth,
+    'nullStr':yamlNullStr
+  };
   return {
-    workflow: workflow.toString(),
+    workflow: workflow.toString(stringOpts),
     actions,
   };
 };
