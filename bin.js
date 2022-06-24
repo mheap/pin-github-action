@@ -25,9 +25,13 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-e, --allow-empty",
         "allow workflows that do not contain any actions"
       )
+      .option( 
+        "-o, --only <owner/repo>",
+        "single action to pin e.g. mheap/debug-action. May be a glob e.g. mheap/*. May have version tag e.g. mheap/debug-action@v1.2.3"
+      )
       .parse(process.argv);
 
-    const filename = program.args[0];
+      const filename = program.args[0];
 
     if (!filename) {
       console.log("Usage: pin-github-action /path/to/workflow.yml");
@@ -37,11 +41,27 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
+    let only = program.opts().only;
+
+    let [onlyOwner, onlyRepo]  = [null,null];
+    let onlyVersion = null;
+    if ( only ){
+      let parts = only.split("/");
+      if ( parts.length != 2 ){
+        throw ( "Syntax for --only: account/repo or account/*");
+      }
+      [onlyOwner,onlyRepo] = parts;
+
+      parts = onlyRepo.split("@");
+      if( 2 == parts.length ){
+        [onlyRepo,onlyVersion] = parts;
+      }
+    }
 
     const input = fs.readFileSync(filename).toString();
 
     let allowEmpty = program.opts().allowEmpty;
-    const output = await run(input, allowed, ignoreShas, allowEmpty, debug);
+    const output = await run(input, allowed, ignoreShas, allowEmpty, debug, onlyOwner, onlyRepo, onlyVersion);
 
     fs.writeFileSync(filename, output.workflow);
 
