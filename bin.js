@@ -25,6 +25,10 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-e, --allow-empty",
         "allow workflows that do not contain any actions"
       )
+      .option(
+        "-s, --safe",
+        "write changes to stdout"
+      )
       .parse(process.argv);
 
     const filename = program.args[0];
@@ -37,13 +41,16 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let allowed = program.opts().allow;
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
+    let allowEmpty = program.opts().allowEmpty;
+    let safeMode = program.opts().safe ? true : false;
 
     const input = fs.readFileSync(filename).toString();
-
-    let allowEmpty = program.opts().allowEmpty;
     const output = await run(input, allowed, ignoreShas, allowEmpty, debug);
 
-    fs.writeFileSync(filename, output.workflow);
+    if (safeMode)
+      console.log(output.workflow);
+    else
+      fs.writeFileSync(filename, output.workflow);
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
     // and generate a PR to update the actions to the latest version. This allows them a
