@@ -4,12 +4,12 @@ const github = new Octokit({
 });
 
 let debug = () => {};
-module.exports = function (action, log) {
+module.exports = function (action, log, onlyVersion) {
   debug = log.extend("find-ref-on-github");
   return new Promise(async function (resolve, reject) {
     const owner = action.owner;
     const repo = action.repo;
-    const pinned = action.pinnedVersion;
+    const pinned = onlyVersion ? onlyVersion : action.pinnedVersion;
     const name = `${owner}/${repo}`;
 
     let error;
