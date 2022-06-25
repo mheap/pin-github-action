@@ -53,7 +53,15 @@ const packageDetails = require(path.join(__dirname, "package.json"));
 
     const input = fs.readFileSync(filename).toString();
 
-    const output = await run(input, allowed, ignoreShas, allowEmpty, debug, yamlLineWidth, yamlNullStr);
+    const output = await run(
+      input,
+      allowed,
+      ignoreShas,
+      allowEmpty,
+      debug,
+      yamlLineWidth,
+      yamlNullStr
+    );
 
     fs.writeFileSync(filename, output.workflow);
 

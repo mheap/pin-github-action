@@ -12,7 +12,7 @@ module.exports = async function (
   ignoreShas,
   allowEmpty,
   debug,
-  yamlLineWidth, 
+  yamlLineWidth,
   yamlNullStr
 ) {
   allowed = allowed || [];
@@ -44,8 +44,8 @@ module.exports = async function (
   }
 
   stringOpts = {
-    'lineWidth':yamlLineWidth,
-    'nullStr':yamlNullStr
+    lineWidth: yamlLineWidth,
+    nullStr: yamlNullStr,
   };
   return {
     workflow: workflow.toString(stringOpts),
