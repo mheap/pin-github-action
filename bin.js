@@ -12,7 +12,9 @@ const packageDetails = require(path.join(__dirname, "package.json"));
   try {
     // Allow for command line arguments
     program
+      .name("pin-github-action")
       .version(packageDetails.version)
+      .usage("[options] [file ...]")
       .option(
         "-a, --allow <actions>",
         "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
@@ -37,11 +39,8 @@ const packageDetails = require(path.join(__dirname, "package.json"));
       )
       .parse(process.argv);
 
-    const filename = program.args[0];
-
-    if (!filename) {
-      console.log("Usage: pin-github-action /path/to/workflow.yml");
-      process.exit(1);
+    if (program.args.length == 0) {
+      program.help();
     }
 
     let allowed = program.opts().allow;
@@ -51,19 +50,25 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let yamlLineWidth = program.opts().yamlLineWidth;
     let yamlNullStr = program.opts().yamlNullStr;
 
-    const input = fs.readFileSync(filename).toString();
+    for (const filename of program.args) {
+      if (!fs.existsSync(filename)) {
+        throw "No such file: " + filename;
+      }
+    }
 
-    const output = await run(
-      input,
-      allowed,
-      ignoreShas,
-      allowEmpty,
-      debug,
-      yamlLineWidth,
-      yamlNullStr
-    );
-
-    fs.writeFileSync(filename, output.workflow);
+    for (const filename of program.args) {
+      const input = fs.readFileSync(filename).toString();
+      const output = await run(
+        input,
+        allowed,
+        ignoreShas,
+        allowEmpty,
+        debug,
+        yamlLineWidth,
+        yamlNullStr
+      );
+      fs.writeFileSync(filename, output.workflow);
+    }
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
     // and generate a PR to update the actions to the latest version. This allows them a

@@ -72,7 +72,12 @@ If you're having issues, run with debug logging enabled and open an issue:
 
 ```bash
 DEBUG="pin-github-action*" pin-github-action /path/to/.github/workflows/your-name.yml
+```
 
+You can process multiple files at once by adding additional files as arguments: 
+
+```bash
+pin-github-action first.yml second.yml 
 ```
 
 ## Leaving Actions unpinned
