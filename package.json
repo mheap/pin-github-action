@@ -26,7 +26,7 @@
     "@octokit/rest": "^18",
     "commander": "^8",
     "debug": "^4.3.4",
-    "matcher": "^4.0.0",
+    "matcher": "^5.0.0",
     "yaml": "^2.1.1"
   },
   "bin": {
