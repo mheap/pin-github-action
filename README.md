@@ -74,7 +74,7 @@ If you're having issues, run with debug logging enabled and open an issue:
 DEBUG="pin-github-action*" pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
-Multiple files are supported: 
+You can process multiple files at once by adding additional files as arguments: 
 
 ```bash
 pin-github-action first.yml second.yml 
