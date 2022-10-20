@@ -245,7 +245,7 @@ test("throws with missing steps", () => {
   });
 
   const actual = () => extractActions(input);
-  expect(actual).toThrow("No job.steps found");
+  expect(actual).toThrow("No job.steps or job.uses found");
 });
 
 test("throws with empty steps", () => {
@@ -351,6 +351,29 @@ test("extracts from composite actions", () => {
           uses: "mheap/test-action@master",
         },
       ],
+    },
+  });
+
+  const actual = extractActions(input);
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "master",
+      pinnedVersion: "master",
+    },
+  ]);
+});
+
+test("extracts from reusable workflows", () => {
+  const input = convertToAst({
+    name: "Sample Reusable",
+    jobs: {
+      test: {
+        uses: "mheap/test-action@master",
+      },
     },
   });
 
