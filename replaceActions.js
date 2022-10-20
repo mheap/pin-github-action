@@ -3,9 +3,10 @@ module.exports = function (input, action) {
   if (runs.length) {
     return replaceInComposite(input, action);
   }
-
   return replaceInWorkflow(input, action);
 };
+
+function replaceInReusable(input, action) {}
 
 function replaceInComposite(input, action) {
   let actionString = `${action.owner}/${action.repo}`;
@@ -48,18 +49,41 @@ function replaceInWorkflow(input, action) {
     .items;
 
   for (let job of jobs) {
-    const steps = job.value.items.filter((n) => n.key == "steps")[0].value
-      .items;
-    for (let step of steps) {
-      const uses = step.items.filter((n) => n.key == "uses");
-      for (let use of uses) {
-        if (use.value.value == actionString) {
-          use.value.value = replacement;
-          use.value.comment = ` pin@${action.pinnedVersion}`;
-        }
-      }
+    const stepKeys = job.value.items.filter((n) => n.key == "steps");
+    const usesKeys = job.value.items.filter((n) => n.key == "uses");
+
+    if (stepKeys.length) {
+      replaceStandard(
+        stepKeys[0].value.items,
+        actionString,
+        replacement,
+        action
+      );
+    } else if (usesKeys.length) {
+      replaceReusable(usesKeys, actionString, replacement, action);
     }
   }
 
   return input;
+}
+
+function replaceReusable(uses, actionString, replacement, action) {
+  for (let use of uses) {
+    if (use.value.value == actionString) {
+      use.value.value = replacement;
+      use.value.comment = ` pin@${action.pinnedVersion}`;
+    }
+  }
+}
+
+function replaceStandard(steps, actionString, replacement, action) {
+  for (let step of steps) {
+    const uses = step.items.filter((n) => n.key == "uses");
+    for (let use of uses) {
+      if (use.value.value == actionString) {
+        use.value.value = replacement;
+        use.value.comment = ` pin@${action.pinnedVersion}`;
+      }
+    }
+  }
 }

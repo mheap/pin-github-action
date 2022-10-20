@@ -23,7 +23,7 @@ function extractFromComposite(input, allowEmpty) {
   const actions = new Set();
   steps = steps[0].value.items;
   for (let step of steps) {
-    handleStep(actions, step);
+    handleStep(actions, step.items);
   }
   return Array.from(actions);
 }
@@ -41,18 +41,26 @@ function extractFromWorkflow(input, allowEmpty) {
   }
 
   for (let job of jobs) {
-    let steps = job.value.items.filter((n) => n.key == "steps");
+    // Check for
+    let steps = job.value.items.filter(
+      (n) => n.key == "steps" || n.key == "uses"
+    );
     if (!steps.length) {
-      throw new Error("No job.steps found");
+      throw new Error("No job.steps or job.uses found");
     }
 
-    steps = steps[0].value.items;
-    if (!steps.length) {
-      throw new Error("No job.steps found");
-    }
+    // It's a job with steps
+    if (steps[0].value.items) {
+      if (!steps[0].value.items.length) {
+        throw new Error("No job.steps found");
+      }
 
-    for (let step of steps) {
-      handleStep(actions, step);
+      for (let step of steps[0].value.items) {
+        handleStep(actions, step.items);
+      }
+    } else {
+      // It's a job that calls a reusable workflow
+      handleStep(actions, steps);
     }
   }
 
@@ -63,8 +71,8 @@ function extractFromWorkflow(input, allowEmpty) {
   return Array.from(actions);
 }
 
-function handleStep(actions, step) {
-  const uses = step.items.filter((n) => n.key == "uses");
+function handleStep(actions, items) {
+  const uses = items.filter((n) => n.key == "uses");
 
   for (let use of uses) {
     const line = use.value.value.toString();
