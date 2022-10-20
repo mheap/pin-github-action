@@ -1,0 +1,5 @@
+name: Call a reusable workflow
+on: pull_request
+jobs:
+  call-workflow:
+    uses: mheap/reusable-workflow-test/.github/workflows/add-label.yml@main

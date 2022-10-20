@@ -1,0 +1,13 @@
+name: Commit Push
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: nexmo/github-actions/submodule-auto-pr@main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: nexmo/github-actions/submodule-auto-pr
+        uses: nexmo/github-actions/submodule-auto-pr@main
