@@ -87,5 +87,5 @@ function handleCommonErrors(e, name) {
     debug(`[${name}] ERROR: Rate Limiting error`);
     return e.message;
   }
-  return '';
+  return "";
 }

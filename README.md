@@ -136,7 +136,3 @@ Examples:
 - Look up the current sha for each repo on GitHub and update the action to use the specific hash
   - If needed, add a comment with the target pinned version
 - Write the workflow file with the new pinned version and original target version as a comment
-
-```
-
-```
