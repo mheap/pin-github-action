@@ -125,6 +125,16 @@ Examples:
 - Partial match: `actions/*`
 - Negated match: `!actions/*` (will only pin `actions/*` actions)
 
+## Customising the pin@{ref} comment
+
+You can specify a comment containing the `{ref}` placeholder to customise the comment added.
+
+To add [support for renovate](https://github.com/mheap/pin-github-action/issues/140), run with the following options (note the leading space):
+
+```bash
+pin-github-action -c " {ref}" /path/to/workflow.yaml
+```
+
 ## How it works
 
 - Load the workflow file provided
