@@ -37,6 +37,11 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "set string representation for null values",
         "null"
       )
+      .option(
+        "-c, --comment <string>",
+        "comment to add inline when pinning an action",
+        " pin@{ref}"
+      )
       .parse(process.argv);
 
     if (program.args.length == 0) {
@@ -49,6 +54,7 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     let allowEmpty = program.opts().allowEmpty;
     let yamlLineWidth = program.opts().yamlLineWidth;
     let yamlNullStr = program.opts().yamlNullStr;
+    let comment = program.opts().comment;
 
     for (const filename of program.args) {
       if (!fs.existsSync(filename)) {
@@ -65,7 +71,8 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         allowEmpty,
         debug,
         yamlLineWidth,
-        yamlNullStr
+        yamlNullStr,
+        comment
       );
       fs.writeFileSync(filename, output.workflow);
     }
