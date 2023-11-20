@@ -32,6 +32,28 @@ test("replaces a single action with a sha (workflow)", () => {
   expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
 });
 
+test("supports a custom comment format (workflow)", () => {
+  const input = convertToAst({
+    name: "PR",
+    on: ["pull_request"],
+    jobs: {
+      "test-job": {
+        "runs-on": "ubuntu-latest",
+        steps: [
+          {
+            name: "test action step",
+            uses: "mheap/test-action@master",
+          },
+        ],
+      },
+    },
+  });
+
+  const actual = replaceActions(input, { ...action }, " {ref}").toString();
+
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
+});
+
 test("replaces a single action with a sha (composite)", () => {
   const input = convertToAst({
     name: "Sample Composite",
@@ -51,6 +73,25 @@ test("replaces a single action with a sha (composite)", () => {
   expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
 });
 
+test("supports a custom comment format (composite)", () => {
+  const input = convertToAst({
+    name: "Sample Composite",
+    runs: {
+      using: "composite",
+      steps: [
+        {
+          name: "With An Action",
+          uses: "mheap/test-action@master",
+        },
+      ],
+    },
+  });
+
+  const actual = replaceActions(input, { ...action }, " {ref}").toString();
+
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
+});
+
 test("replaces a single action with a sha (reusable)", () => {
   const input = convertToAst({
     name: "Sample Reusable",
@@ -64,6 +105,21 @@ test("replaces a single action with a sha (reusable)", () => {
   const actual = replaceActions(input, { ...action }).toString();
 
   expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
+});
+
+test("supports a custom comment format (reusable)", () => {
+  const input = convertToAst({
+    name: "Sample Reusable",
+    jobs: {
+      test: {
+        uses: "mheap/test-action@master",
+      },
+    },
+  });
+
+  const actual = replaceActions(input, { ...action }, " {ref}").toString();
+
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
 test("replaces an existing sha with a different sha, not changing the pinned branch", () => {

@@ -13,7 +13,8 @@ module.exports = async function (
   allowEmpty,
   debug,
   yamlLineWidth,
-  yamlNullStr
+  yamlNullStr,
+  comment
 ) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
@@ -40,7 +41,7 @@ module.exports = async function (
     actions[i].newVersion = newVersion;
 
     // Rewrite each action, replacing the uses block with a specific sha
-    workflow = replaceActions(workflow, actions[i]);
+    workflow = replaceActions(workflow, actions[i], comment);
   }
 
   stringOpts = {
