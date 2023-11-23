@@ -1,18 +1,18 @@
 let debug = () => {};
-module.exports = function (input, allowEmpty, log) {
+module.exports = function (input, allowEmpty, comment, log) {
   debug = log.extend("extract-actions");
   // Check if it's a composite action
   let runs = input.contents.items.filter((n) => n.key == "runs");
   if (runs.length) {
     debug("Processing composite action");
-    return extractFromComposite(input, allowEmpty);
+    return extractFromComposite(input, allowEmpty, comment);
   }
 
   debug("Processing workflow");
-  return extractFromWorkflow(input, allowEmpty);
+  return extractFromWorkflow(input, allowEmpty, comment);
 };
 
-function extractFromComposite(input, allowEmpty) {
+function extractFromComposite(input, allowEmpty, comment) {
   let runs = input.contents.items.filter((n) => n.key == "runs");
   let steps = runs[0].value.items.filter((n) => n.key == "steps");
 
@@ -23,12 +23,12 @@ function extractFromComposite(input, allowEmpty) {
   const actions = new Set();
   steps = steps[0].value.items;
   for (let step of steps) {
-    handleStep(actions, step.items);
+    handleStep(actions, step.items, comment);
   }
   return Array.from(actions);
 }
 
-function extractFromWorkflow(input, allowEmpty) {
+function extractFromWorkflow(input, allowEmpty, comment) {
   let actions = new Set();
 
   let jobs = input.contents.items.filter((n) => n.key == "jobs");
@@ -56,11 +56,11 @@ function extractFromWorkflow(input, allowEmpty) {
       }
 
       for (let step of steps[0].value.items) {
-        handleStep(actions, step.items);
+        handleStep(actions, step.items, comment);
       }
     } else {
       // It's a job that calls a reusable workflow
-      handleStep(actions, steps);
+      handleStep(actions, steps, comment);
     }
   }
 
@@ -71,7 +71,7 @@ function extractFromWorkflow(input, allowEmpty) {
   return Array.from(actions);
 }
 
-function handleStep(actions, items) {
+function handleStep(actions, items, comment) {
   const uses = items.filter((n) => n.key == "uses");
 
   for (let use of uses) {
@@ -87,7 +87,10 @@ function handleStep(actions, items) {
     }
 
     const details = parseAction(line);
-    let original = (use.value.comment || "").replace(" pin@", "");
+
+    comment = comment.replace("{ref}", "");
+
+    let original = (use.value.comment || "").replace(comment, "");
     if (!original) {
       original = details.currentVersion;
     }

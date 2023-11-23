@@ -23,7 +23,7 @@ module.exports = async function (
   let workflow = YAML.parseDocument(input);
 
   // Extract list of actions
-  let actions = extractActions(workflow, allowEmpty, debug);
+  let actions = extractActions(workflow, allowEmpty, comment, debug);
 
   for (let i in actions) {
     // Should this action be updated?
