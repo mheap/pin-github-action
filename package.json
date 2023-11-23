@@ -23,7 +23,7 @@
     "prettier": "^2"
   },
   "dependencies": {
-    "@octokit/rest": "^18",
+    "@octokit/rest": "^20",
     "commander": "^9",
     "debug": "^4.3.4",
     "matcher": "^4.0.0",
