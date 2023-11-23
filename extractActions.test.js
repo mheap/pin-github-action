@@ -2,8 +2,11 @@ const YAML = require("yaml");
 const debug = require("debug")("pin-github-action-test");
 
 const run = require("./extractActions");
-const extractActions = (input, allowEmpty) => {
-  return run.apply(null, [input, allowEmpty, debug]);
+const extractActions = (input, allowEmpty, comment) => {
+  if (!comment) {
+    comment = " pin@{ref}";
+  }
+  return run.apply(null, [input, allowEmpty, comment, debug]);
 };
 
 test("extracts a single version", () => {
@@ -57,6 +60,31 @@ test("extracts a pinned version", () => {
       path: "",
       currentVersion: "abc123",
       pinnedVersion: "master",
+    },
+  ]);
+});
+
+test("extracts a pinned version with a custom comment", () => {
+  const input = YAML.parseDocument(`
+    name: PR
+    on:
+      - pull_request
+    jobs:
+      test-job:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Test Action Step
+            uses: "mheap/test-action@abc123" # 1.4.0`);
+
+  const actual = extractActions(input, false, " {ref}");
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "abc123",
+      pinnedVersion: "1.4.0",
     },
   ]);
 });
