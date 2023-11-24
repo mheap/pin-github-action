@@ -58,6 +58,22 @@ npm install -g pin-github-action
 pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
+Options are:
+```bash
+pin-github-action -h
+Usage: pin-github-action [options] [file ...]
+
+Options:
+  -V, --version                  output the version number
+  -a, --allow <actions>          comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*
+  -i, --ignore-shas              do not update any commits that are pinned at a sha
+  -e, --allow-empty              allow workflows that do not contain any actions
+  -l, --yaml-line-width <width>  set maximum output width before a line break (default: "120")
+  -n, --yaml-null-str <string>   set string representation for null values (default: "null")
+  -c, --comment <string>         comment to add inline when pinning an action (default: " pin@{ref}")
+  -h, --help                     display help for command
+```
+
 If you use private actions (or are hitting rate limits), you'll need to provide
 a GitHub access token:
 
@@ -109,7 +125,7 @@ jobs:
         uses: nexmo/github-actions/submodule-auto-pr@73549280c1c566830040d9a01fe9050dae6a3036 # pin@main
 ```
 
-You can pass multiple actions to allow as a comma separated list e.g. `actions/checkout,mheap/*`
+You can pass multiple actions to allow as a comma separated list e.g. `--allow 'actions/checkout,mheap/*'`
 
 A quick overview of the available globbing patterns (taken from [multimatch](https://github.com/sindresorhus/multimatch), which we use to match globs):
 
