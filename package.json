@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^18",
-    "commander": "^9",
+    "commander": "^11",
     "debug": "^4.3.4",
     "matcher": "^4.0.0",
     "yaml": "^2.1.3"
