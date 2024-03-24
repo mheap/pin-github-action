@@ -74,7 +74,31 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         yamlNullStr,
         comment
       );
-      fs.writeFileSync(filename, output.workflow);
+
+      if (!comment) {
+        comment = ` pin@{ref}`;
+      }
+
+      let outWorkflow = input;
+      for (const action of output.actions) {
+        const { currentVersion, owner, newVersion, path, pinnedVersion, repo } =
+          action;
+
+        const actionId = `${owner}/${repo}${path ? `/${path}` : ""}`;
+        const newComment = `${comment.replace("{ref}", pinnedVersion)}`;
+
+        const expr = new RegExp(
+          `uses:(\\s*)${actionId}@${currentVersion}(?:(\\s*)#[^\\n]*)?`,
+          "g"
+        );
+
+        outWorkflow = outWorkflow.replace(
+          expr,
+          `uses:$1${actionId}@${newVersion} #${newComment}`
+        );
+      }
+
+      fs.writeFileSync(filename, outWorkflow);
     }
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
