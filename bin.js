@@ -87,15 +87,27 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         const actionId = `${owner}/${repo}${path ? `/${path}` : ""}`;
         const newComment = `${comment.replace("{ref}", pinnedVersion)}`;
 
-        const expr = new RegExp(
-          `uses:(\\s*)${actionId}@${currentVersion}(?:(\\s*)#[^\\n]*)?`,
+        const exprUpdate = new RegExp(
+          `uses(\\s*):(\\s+)${actionId}@${currentVersion}(\\s*)#[^\\n]*`,
           "g"
         );
 
-        outWorkflow = outWorkflow.replace(
-          expr,
-          `uses:$1${actionId}@${newVersion} #${newComment}`
-        );
+        if (exprUpdate.test(outWorkflow)) {
+          outWorkflow = outWorkflow.replace(
+            exprUpdate,
+            `uses$1:$2${actionId}@${newVersion}$3#${newComment}`
+          );
+        } else {
+          const exprPin = new RegExp(
+            `uses(\\s*):(\\s+)${actionId}@${currentVersion}`,
+            "g"
+          );
+
+          outWorkflow = outWorkflow.replace(
+            exprPin,
+            `uses$1:$2${actionId}@${newVersion} #${newComment}`
+          );
+        }
       }
 
       fs.writeFileSync(filename, outWorkflow);
