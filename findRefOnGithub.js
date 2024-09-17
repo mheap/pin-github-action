@@ -1,7 +1,7 @@
 const { Octokit } = require("@octokit/rest");
 const github = new Octokit({
   auth: process.env.GH_ADMIN_TOKEN,
-  baseUrl: process.env.BASE_URL,
+  baseUrl: process.env.BASE_URL || "https://api.github.com",
 });
 
 let debug = () => {};
