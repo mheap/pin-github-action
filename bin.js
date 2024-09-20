@@ -29,12 +29,12 @@ const packageDetails = require(path.join(__dirname, "package.json"));
       )
       .option(
         "-l, --yaml-line-width <width>",
-        "set maximum output width before a line break",
+        "no effect (deprecated)",
         "120"
       )
       .option(
         "-n, --yaml-null-str <string>",
-        "set string representation for null values",
+        "no effect (deprecated)",
         "null"
       )
       .option(
@@ -52,8 +52,6 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
     let allowEmpty = program.opts().allowEmpty;
-    let yamlLineWidth = program.opts().yamlLineWidth;
-    let yamlNullStr = program.opts().yamlNullStr;
     let comment = program.opts().comment;
 
     for (const filename of program.args) {
@@ -70,47 +68,9 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         ignoreShas,
         allowEmpty,
         debug,
-        yamlLineWidth,
-        yamlNullStr,
         comment
       );
-
-      if (!comment) {
-        comment = ` pin@{ref}`;
-      }
-
-      let outWorkflow = input;
-      for (const action of output.actions) {
-        const { currentVersion, owner, newVersion, path, pinnedVersion, repo } =
-          action;
-
-        const actionId = `${owner}/${repo}${path ? `/${path}` : ""}`;
-        const newComment = `${comment.replace("{ref}", pinnedVersion)}`;
-
-        const exprUpdate = new RegExp(
-          `uses(\\s*):(\\s+)${actionId}@${currentVersion}(\\s*)#[^\\n]*`,
-          "g"
-        );
-
-        if (exprUpdate.test(outWorkflow)) {
-          outWorkflow = outWorkflow.replace(
-            exprUpdate,
-            `uses$1:$2${actionId}@${newVersion}$3#${newComment}`
-          );
-        } else {
-          const exprPin = new RegExp(
-            `uses(\\s*):(\\s+)${actionId}@${currentVersion}`,
-            "g"
-          );
-
-          outWorkflow = outWorkflow.replace(
-            exprPin,
-            `uses$1:$2${actionId}@${newVersion} #${newComment}`
-          );
-        }
-      }
-
-      fs.writeFileSync(filename, outWorkflow);
+      fs.writeFileSync(filename, output.workflow);
     }
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
