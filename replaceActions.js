@@ -1,3 +1,5 @@
+const escapeStringRegexp = require("escape-string-regexp");
+
 module.exports = function (input, action, comment) {
   const { currentVersion, owner, newVersion, path, repo } = action;
 
@@ -5,7 +7,9 @@ module.exports = function (input, action, comment) {
   const newComment = generateComment(action, comment);
 
   const regexpUpdate = new RegExp(
-    `uses(\\s*):(\\s+)${actionId}@${currentVersion}(\\s*)#[^\\n]*`,
+    `uses(\\s*):(\\s+)${escapeStringRegexp(actionId)}@${escapeStringRegexp(
+      currentVersion
+    )}(\\s*)#[^\\n]*`,
     "g"
   );
 
@@ -17,7 +21,9 @@ module.exports = function (input, action, comment) {
   }
 
   const regexpPin = new RegExp(
-    `uses(\\s*):(\\s+)${actionId}@${currentVersion}`,
+    `uses(\\s*):(\\s+)${escapeStringRegexp(actionId)}@${escapeStringRegexp(
+      currentVersion
+    )}`,
     "g"
   );
 

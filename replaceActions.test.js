@@ -304,6 +304,31 @@ jobs:
   expect(actual).toContain("      uses: mheap/test-action@sha-two # pin@v1");
 });
 
+test("handles RegExp meta-characters", () => {
+  let input = `name: PR
+on:
+  - pull_request
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test indentation #1
+        uses: mheap/test-action@sha-one # pin@v1
+`;
+
+  expect(() => {
+    replaceActions(input, {
+      ...action,
+      owner: "a[b",
+      repo: "c[d",
+      path: "e[f",
+      pinnedVersion: "v1",
+      currentVersion: "sha[one",
+      newVersion: "sha[two",
+    });
+  }).not.toThrow();
+});
+
 function convertToYaml(input) {
   return YAML.stringify(input);
 }
