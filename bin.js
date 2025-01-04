@@ -27,8 +27,6 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "-e, --allow-empty",
         "allow workflows that do not contain any actions"
       )
-      .option("-l, --yaml-line-width <width>", "no effect (deprecated)", "120")
-      .option("-n, --yaml-null-str <string>", "no effect (deprecated)", "null")
       .option(
         "-c, --comment <string>",
         "comment to add inline when pinning an action",
