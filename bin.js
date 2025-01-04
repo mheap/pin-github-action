@@ -28,16 +28,6 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         "allow workflows that do not contain any actions"
       )
       .option(
-        "-l, --yaml-line-width <width>",
-        "set maximum output width before a line break",
-        "120"
-      )
-      .option(
-        "-n, --yaml-null-str <string>",
-        "set string representation for null values",
-        "null"
-      )
-      .option(
         "-c, --comment <string>",
         "comment to add inline when pinning an action",
         " pin@{ref}"
@@ -52,8 +42,6 @@ const packageDetails = require(path.join(__dirname, "package.json"));
     allowed = (allowed || "").split(",").filter((r) => r);
     let ignoreShas = program.opts().ignoreShas;
     let allowEmpty = program.opts().allowEmpty;
-    let yamlLineWidth = program.opts().yamlLineWidth;
-    let yamlNullStr = program.opts().yamlNullStr;
     let comment = program.opts().comment;
 
     for (const filename of program.args) {
@@ -70,8 +58,6 @@ const packageDetails = require(path.join(__dirname, "package.json"));
         ignoreShas,
         allowEmpty,
         debug,
-        yamlLineWidth,
-        yamlNullStr,
         comment
       );
       fs.writeFileSync(filename, output.workflow);
