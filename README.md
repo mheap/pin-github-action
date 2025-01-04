@@ -48,8 +48,16 @@ For more information, see [How it works](#how-it-works).
 
 ## Installation
 
-```
+### Nodejs
+
+```bash
 npm install -g pin-github-action
+```
+
+### Docker
+
+```bash
+alias pin-github-action="docker run --rm -v $(pwd):/src -e GH_ADMIN_TOKEN mheap/pin-github-action"
 ```
 
 ## Usage
@@ -74,10 +82,10 @@ If you're having issues, run with debug logging enabled and open an issue:
 DEBUG="pin-github-action*" pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
-You can process multiple files at once by adding additional files as arguments: 
+You can process multiple files at once by adding additional files as arguments:
 
 ```bash
-pin-github-action first.yml second.yml 
+pin-github-action first.yml second.yml
 ```
 
 ## Leaving Actions unpinned
