@@ -2,9 +2,10 @@
   "name": "pin-github-action",
   "version": "2.0.1",
   "description": "Pin your GitHub Actions to specific versions automatically!",
-  "main": "index.js",
+  "exports": "./index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 jest",
     "lint": "eslint *.js",
     "lint-fix": "eslint --fix *.js"
   },
@@ -16,6 +17,7 @@
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-plugin-prettier": "^4",
     "jest": "^29",

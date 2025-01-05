@@ -1,7 +1,8 @@
-const YAML = require("yaml");
-const debug = require("debug")("pin-github-action-test");
+import YAML from "yaml";
+import debugLib from "debug";
+const debug = debugLib("pin-github-action-test");
 
-const run = require("./extractActions");
+import run from "./extractActions";
 const extractActions = (input, allowEmpty, comment) => {
   if (!comment) {
     comment = " pin@{ref}";

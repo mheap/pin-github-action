@@ -1,7 +1,8 @@
 {
     "parserOptions": {
-        "ecmaVersion": 2018,
-        "impliedStrict": true
+        "ecmaVersion": 2023,
+        "impliedStrict": true,
+        "sourceType": "module"
     },
     "plugins": [
         "prettier"

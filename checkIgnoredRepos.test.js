@@ -1,5 +1,6 @@
-const debug = require("debug")("pin-github-action-test");
-const run = require("./checkAllowedRepos");
+import debugLib from "debug";
+const debug = debugLib("pin-github-action-test");
+import run from "./checkAllowedRepos";
 const checkAllowedRepos = (input, ignore) => {
   return run.apply(null, [input, ignore, debug]);
 };

@@ -1,10 +1,10 @@
-const { Octokit } = require("@octokit/rest");
+import { Octokit } from "@octokit/rest";
 const github = new Octokit({
   auth: process.env.GH_ADMIN_TOKEN,
 });
 
 let debug = () => {};
-module.exports = function (action, log) {
+export default function (action, log) {
   debug = log.extend("find-ref-on-github");
   return new Promise(async function (resolve, reject) {
     const owner = action.owner;
@@ -73,7 +73,7 @@ module.exports = function (action, log) {
       `Unable to find SHA for ${owner}/${repo}@${pinned}\n${error}`
     );
   });
-};
+}
 
 function handleCommonErrors(e, name) {
   if (e.status == 404) {

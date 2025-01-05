@@ -1,8 +1,9 @@
-const nock = require("nock");
+import nock from "nock";
 nock.disableNetConnect();
 
-const debug = require("debug")("pin-github-action-test");
-const run = require("./findRefOnGithub");
+import debugLib from "debug";
+const debug = debugLib("pin-github-action-test");
+import run from "./findRefOnGithub";
 const findRef = (action) => {
   return run.apply(null, [action, debug]);
 };
