@@ -1,12 +1,11 @@
-const YAML = require("yaml");
+import YAML from "yaml";
+import extractActions from "./extractActions.js";
+import replaceActions from "./replaceActions.js";
+import findRefOnGithub from "./findRefOnGithub.js";
+import checkAllowedRepos from "./checkAllowedRepos.js";
+import isSha from "./isSha.js";
 
-const extractActions = require("./extractActions");
-const replaceActions = require("./replaceActions");
-const findRefOnGithub = require("./findRefOnGithub");
-const checkAllowedRepos = require("./checkAllowedRepos");
-const isSha = require("./isSha");
-
-module.exports = async function (
+export default async function (
   input,
   allowed,
   ignoreShas,
@@ -46,4 +45,4 @@ module.exports = async function (
     workflow,
     actions,
   };
-};
+}

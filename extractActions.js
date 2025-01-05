@@ -1,5 +1,5 @@
 let debug = () => {};
-module.exports = function (input, allowEmpty, comment, log) {
+export default function (input, allowEmpty, comment, log) {
   debug = log.extend("extract-actions");
   // Check if it's a composite action
   let runs = input.contents.items.filter((n) => n.key == "runs");
@@ -10,7 +10,7 @@ module.exports = function (input, allowEmpty, comment, log) {
 
   debug("Processing workflow");
   return extractFromWorkflow(input, allowEmpty, comment);
-};
+}
 
 function extractFromComposite(input, allowEmpty, comment) {
   let runs = input.contents.items.filter((n) => n.key == "runs");
@@ -103,10 +103,9 @@ function handleStep(actions, items, comment) {
 
 function parseAction(str) {
   const [name, version] = str.split("@");
-  let path = "";
 
   // The action could be in a subdirectory
-  [owner, repo, ...path] = name.split("/");
+  let [owner, repo, ...path] = name.split("/");
   path = path.join("/");
   return { owner, repo, currentVersion: version, path };
 }

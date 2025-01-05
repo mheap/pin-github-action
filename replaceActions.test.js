@@ -1,5 +1,5 @@
-const replaceActions = require("./replaceActions");
-const YAML = require("yaml");
+import replaceActions from "./replaceActions";
+import YAML from "yaml";
 
 const action = {
   owner: "mheap",

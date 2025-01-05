@@ -1,6 +1,6 @@
-const escapeStringRegexp = require("escape-string-regexp");
+import escapeStringRegexp from "escape-string-regexp";
 
-module.exports = function (input, action, comment) {
+export default function (input, action, comment) {
   const { currentVersion, owner, newVersion, path, repo } = action;
 
   const actionId = `${owner}/${repo}${path ? `/${path}` : ""}`;
@@ -31,7 +31,7 @@ module.exports = function (input, action, comment) {
     regexpPin,
     `uses$1:$2${actionId}@${newVersion} #${newComment}`
   );
-};
+}
 
 function generateComment(action, comment) {
   if (!comment) {

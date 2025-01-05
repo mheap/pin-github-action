@@ -1,4 +1,4 @@
-const isSha = require("./isSha");
+import isSha from "./isSha";
 
 test("returns false if a non-sha is provided", () => {
   const actual = isSha({

@@ -1,7 +1,7 @@
-const matcher = require("matcher");
+import matcher from "matcher";
 
 let debug = () => {};
-module.exports = function (input, ignored, log) {
+export default function (input, ignored, log) {
   debug = log.extend("check-allowed-repos");
   // Nothing ignored, so it can't match
   if (ignored.length === 0) {
@@ -21,4 +21,4 @@ module.exports = function (input, ignored, log) {
     debug(`Skipping ${input} due to pattern match in ${ignored}`);
   }
   return isMatch;
-};
+}

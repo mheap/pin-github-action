@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const program = require("commander");
-const debug = require("debug")("pin-github-action");
+import fs from "fs";
+import { program } from "commander";
+import debugLib from "debug";
+const debug = debugLib("pin-github-action");
 
-const run = require(".");
+import run from "./index.js";
 
-const packageDetails = require(path.join(__dirname, "package.json"));
+const packageDetails = JSON.parse(
+  fs.readFileSync(new URL("./package.json", import.meta.url))
+);
+
 (async () => {
   try {
     // Allow for command line arguments
