@@ -63,7 +63,7 @@ const packageDetails = JSON.parse(
         debug,
         comment
       );
-      fs.writeFileSync(filename, output.workflow);
+      fs.writeFileSync(filename, output.workflow.toString());
     }
 
     // Once run on a schedule, have it return a list of changes, along with SHA links
