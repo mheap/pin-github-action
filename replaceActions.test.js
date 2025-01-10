@@ -10,7 +10,7 @@ const action = {
   newVersion: "sha-here",
 };
 
-test("replaces a single action with a sha (workflow)", () => {
+test("replaces a single action with a SHA (workflow)", () => {
   const input = convertToYaml({
     name: "PR",
     on: ["pull_request"],
@@ -54,7 +54,7 @@ test("supports a custom comment format (workflow)", () => {
   expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
-test("replaces a single action with a sha (composite)", () => {
+test("replaces a single action with a SHA (composite)", () => {
   const input = convertToYaml({
     name: "Sample Composite",
     runs: {
@@ -92,7 +92,7 @@ test("supports a custom comment format (composite)", () => {
   expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
-test("replaces a single action with a sha (reusable)", () => {
+test("replaces a single action with a SHA (reusable)", () => {
   const input = convertToYaml({
     name: "Sample Reusable",
     jobs: {
@@ -122,7 +122,7 @@ test("supports a custom comment format (reusable)", () => {
   expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
-test("replaces an existing sha with a different sha, not changing the pinned branch", () => {
+test("replaces an existing SHA with a different SHA, not changing the pinned branch", () => {
   const input = convertToYaml({
     name: "PR",
     on: ["pull_request"],
