@@ -7,6 +7,7 @@ const debug = debugLib("pin-github-action");
 
 import run from "./index.js";
 
+const mainDebug = debug.extend("main-program");
 const packageDetails = JSON.parse(
   fs.readFileSync(new URL("./package.json", import.meta.url))
 );
@@ -17,7 +18,7 @@ const packageDetails = JSON.parse(
     program
       .name("pin-github-action")
       .version(packageDetails.version)
-      .usage("[options] [file ...]")
+      .usage("[options] [file||directory ...]")
       .option(
         "-a, --allow <actions>",
         "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
@@ -49,11 +50,29 @@ const packageDetails = JSON.parse(
 
     for (const filename of program.args) {
       if (!fs.existsSync(filename)) {
-        throw "No such file: " + filename;
+        throw "No such file or directory: " + filename;
       }
     }
 
+    let filesToProcess = [];
+
     for (const filename of program.args) {
+      if (fs.lstatSync(filename).isFile()) {
+        filesToProcess.push(filename);
+      } else {
+        const files = fs.readdirSync(filename).filter((f) => {
+          f.includes("yml") || f.includes(".yaml");
+        });
+        filesToProcess.concat(files);
+      }
+    }
+
+    if (filesToProcess.length === 0) {
+      throw "Didn't find YML files in provided paths: " + program.args;
+    }
+
+    for (const filename of filesToProcess) {
+      mainDebug("Processing " + filename);
       const input = fs.readFileSync(filename).toString();
       const output = await run(
         input,
