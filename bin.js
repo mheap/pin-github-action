@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "fs";
+import path from "path";
 import { program } from "commander";
 import debugLib from "debug";
 const debug = debugLib("pin-github-action");
@@ -48,27 +49,33 @@ const packageDetails = JSON.parse(
     let allowEmpty = program.opts().allowEmpty;
     let comment = program.opts().comment;
 
-    for (const filename of program.args) {
-      if (!fs.existsSync(filename)) {
-        throw "No such file or directory: " + filename;
+    for (const pathname of program.args) {
+      if (!fs.existsSync(pathname)) {
+        throw "No such file or directory: " + pathname;
       }
     }
 
     let filesToProcess = [];
 
-    for (const filename of program.args) {
-      if (fs.lstatSync(filename).isFile()) {
-        filesToProcess.push(filename);
+    for (const pathname of program.args) {
+      if (fs.lstatSync(pathname).isFile()) {
+        filesToProcess.push(pathname);
       } else {
-        const files = fs.readdirSync(filename).filter((f) => {
-          f.includes("yml") || f.includes(".yaml");
-        });
-        filesToProcess.concat(files);
+        const files = fs
+          .readdirSync(pathname)
+          .filter((f) => {
+            return f.includes(".yaml") || f.includes(".yml");
+          })
+          .map((f) => path.join(pathname, f));
+        filesToProcess = filesToProcess.concat(files);
       }
     }
 
+    // If user will pass both file and directory, make sure to clear duplicates
+    filesToProcess = [...new Set(filesToProcess)];
+
     if (filesToProcess.length === 0) {
-      throw "Didn't find YML files in provided paths: " + program.args;
+      throw "Didn't find Y(A)ML files in provided paths: " + program.args;
     }
 
     for (const filename of filesToProcess) {
