@@ -1,12 +1,12 @@
 # pin-github-action
 
 This is a tool that allows you to pin your GitHub actions dependencies to a
-specific sha without requiring that you update every action manually each time
+specific SHA without requiring that you update every action manually each time
 you want to use a newer version of an action.
 
 It achieves this by converting your workflow to use a specific commit hash,
 whilst adding the original value as a comment on that line. This allows us to
-resolve newer shas for that target ref automatically in the future.
+resolve newer SHAs for that target ref automatically in the future.
 
 It converts this:
 
@@ -81,8 +81,8 @@ a GitHub access token:
 GH_ADMIN_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
-Run it as many times as you like! Each time you run the tool the exact sha will
-be updated to the latest available sha for your pinned ref.
+Run it as many times as you like! Each time you run the tool the exact SHA will
+be updated to the latest available SHA for your pinned ref.
 
 If you're having issues, run with debug logging enabled and open an issue:
 
@@ -165,6 +165,6 @@ pin-github-action -c " {ref}" /path/to/workflow.yaml
 - Loop through all `uses` steps to determine the target ref
   - If there's a comment in the step, remove `pin@` and use that as the target
   - Otherwise, fall back to the ref in the action as the default
-- Look up the current sha for each repo on GitHub and update the action to use the specific hash
+- Look up the current SHA for each repo on GitHub and update the action to use the specific hash
   - If needed, add a comment with the target pinned version
 - Write the workflow file with the new pinned version and original target version as a comment

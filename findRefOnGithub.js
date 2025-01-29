@@ -36,13 +36,13 @@ export default function (action, log) {
             repo,
             tag_sha: object.sha,
           });
-          debug(`[${name}] Fetched commit. Found sha.`);
+          debug(`[${name}] Fetched commit. Found SHA.`);
           return resolve(tag.data.object.sha);
         }
 
         // If it's already a commit, return that
         if (object.type === "commit") {
-          debug(`[${name}] Ref is a commit. Found sha.`);
+          debug(`[${name}] Ref is a commit. Found SHA.`);
           return resolve(object.sha);
         }
       } catch (e) {

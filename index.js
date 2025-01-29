@@ -37,7 +37,7 @@ export default async function (
     const newVersion = await findRefOnGithub(actions[i], debug);
     actions[i].newVersion = newVersion;
 
-    // Rewrite each action, replacing the uses block with a specific sha
+    // Rewrite each action, replacing the uses block with a specific SHA
     input = replaceActions(input, actions[i], comment);
   }
 
