@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import path from "path";
 import { program } from "commander";
 import debugLib from "debug";
 const debug = debugLib("pin-github-action");
 
 import run from "./index.js";
+import collectWorkflowFiles from "./collectWorkflowFiles.js";
 
 const mainDebug = debug.extend("main-program");
 const packageDetails = JSON.parse(
@@ -39,7 +39,7 @@ const packageDetails = JSON.parse(
       )
       .parse(process.argv);
 
-    if (program.args.length == 0) {
+    if (program.args.length === 0) {
       program.help();
     }
 
@@ -55,24 +55,7 @@ const packageDetails = JSON.parse(
       }
     }
 
-    let filesToProcess = [];
-
-    for (const pathname of program.args) {
-      if (fs.lstatSync(pathname).isFile()) {
-        filesToProcess.push(pathname);
-      } else {
-        const files = fs
-          .readdirSync(pathname)
-          .filter((f) => {
-            return f.includes(".yaml") || f.includes(".yml");
-          })
-          .map((f) => path.join(pathname, f));
-        filesToProcess = filesToProcess.concat(files);
-      }
-    }
-
-    // If user will pass both file and directory, make sure to clear duplicates
-    filesToProcess = [...new Set(filesToProcess)];
+    const filesToProcess = collectWorkflowFiles(program.args);
 
     if (filesToProcess.length === 0) {
       throw "Didn't find Y(A)ML files in provided paths: " + program.args;
