@@ -38,11 +38,11 @@ export default async function (
     actions[i].newVersion = newVersion;
 
     // Rewrite each action, replacing the uses block with a specific SHA
-    workflow = replaceActions(input, actions[i], comment);
+    input = replaceActions(input, actions[i], comment);
   }
 
   return {
-    workflow,
+    input,
     actions,
   };
 }
