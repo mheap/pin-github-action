@@ -62,8 +62,16 @@ alias pin-github-action="docker run --rm -v $(pwd):/src -e GH_ADMIN_TOKEN mheap/
 
 ## Usage
 
+Use on single file:
+
 ```bash
 pin-github-action /path/to/.github/workflows/your-name.yml
+```
+
+Use on all YAML|YML files in directory:
+
+```bash
+pin-github-action /path/to/.github/workflows/
 ```
 
 If you use private actions (or are hitting rate limits), you'll need to provide
@@ -82,10 +90,16 @@ If you're having issues, run with debug logging enabled and open an issue:
 DEBUG="pin-github-action*" pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
-You can process multiple files at once by adding additional files as arguments:
+You can pass multiple files at once by adding additional files as arguments:
 
 ```bash
 pin-github-action first.yml second.yml
+```
+
+And you can mix directories with files:
+
+```bash
+pin-github-action first.yml /path/to/.github/workflows/
 ```
 
 ## Leaving Actions unpinned

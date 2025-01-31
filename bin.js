@@ -6,7 +6,9 @@ import debugLib from "debug";
 const debug = debugLib("pin-github-action");
 
 import run from "./index.js";
+import collectWorkflowFiles from "./collectWorkflowFiles.js";
 
+const mainDebug = debug.extend("main-program");
 const packageDetails = JSON.parse(
   fs.readFileSync(new URL("./package.json", import.meta.url))
 );
@@ -17,7 +19,7 @@ const packageDetails = JSON.parse(
     program
       .name("pin-github-action")
       .version(packageDetails.version)
-      .usage("[options] [file ...]")
+      .usage("[options] [file||directory ...]")
       .option(
         "-a, --allow <actions>",
         "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
@@ -37,7 +39,7 @@ const packageDetails = JSON.parse(
       )
       .parse(process.argv);
 
-    if (program.args.length == 0) {
+    if (program.args.length === 0) {
       program.help();
     }
 
@@ -47,13 +49,20 @@ const packageDetails = JSON.parse(
     let allowEmpty = program.opts().allowEmpty;
     let comment = program.opts().comment;
 
-    for (const filename of program.args) {
-      if (!fs.existsSync(filename)) {
-        throw "No such file: " + filename;
+    for (const pathname of program.args) {
+      if (!fs.existsSync(pathname)) {
+        throw "No such file or directory: " + pathname;
       }
     }
 
-    for (const filename of program.args) {
+    const filesToProcess = collectWorkflowFiles(program.args);
+
+    if (filesToProcess.length === 0) {
+      throw "Didn't find Y(A)ML files in provided paths: " + program.args;
+    }
+
+    for (const filename of filesToProcess) {
+      mainDebug("Processing " + filename);
       const input = fs.readFileSync(filename).toString();
       const output = await run(
         input,
