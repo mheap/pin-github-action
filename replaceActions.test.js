@@ -329,6 +329,50 @@ jobs:
   }).not.toThrow();
 });
 
+test("supports single and double quotes uses values when adding a pin", () => {
+  const input = `name: PR
+on:
+  - pull_request
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test with double quoted action
+        uses: "mheap/test-action@master"
+        
+      - name: test with single quoted action
+        uses: 'mheap/test-action@master'`;
+
+  const actual = replaceActions(input, { ...action });
+  expect(actual).toContain('uses: "mheap/test-action@sha-here" # pin@master');
+  expect(actual).toContain("uses: 'mheap/test-action@sha-here' # pin@master");
+});
+
+test("supports single and double quotes uses values when updating a pin", () => {
+  const input = `name: PR
+on:
+  - pull_request
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test where uses comes after the dash
+        uses: "mheap/test-action@sha-one" # pin@v1
+
+      - name: test with extra leading spaces
+        uses: 'mheap/test-action@sha-one' # pin@v1`;
+
+  const actual = replaceActions(input, {
+    ...action,
+    pinnedVersion: "v1",
+    currentVersion: "sha-one",
+    newVersion: "sha-two",
+  });
+
+  expect(actual).toContain('uses: "mheap/test-action@sha-two" # pin@v1');
+  expect(actual).toContain("uses: 'mheap/test-action@sha-two' # pin@v1");
+});
+
 function convertToYaml(input) {
   return YAML.stringify(input);
 }
