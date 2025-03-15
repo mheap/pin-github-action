@@ -243,9 +243,7 @@ jobs:
 `;
 
   let actual = replaceActions(input, { ...action });
-  expect(actual).toContain(
-    "        uses: mheap/test-action@sha-here # master"
-  );
+  expect(actual).toContain("        uses: mheap/test-action@sha-here # master");
 
   input = `name: PR
 on:
@@ -259,9 +257,7 @@ jobs:
 `;
 
   actual = replaceActions(input, { ...action });
-  expect(actual).toContain(
-    "      uses: mheap/test-action@sha-here # master"
-  );
+  expect(actual).toContain("      uses: mheap/test-action@sha-here # master");
 });
 
 test("maintains indentation when updating a pin", () => {

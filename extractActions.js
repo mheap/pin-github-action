@@ -43,7 +43,7 @@ function extractFromWorkflow(input, allowEmpty, comment) {
   for (let job of jobs) {
     // Check for
     let steps = job.value.items.filter(
-      (n) => n.key == "steps" || n.key == "uses"
+      (n) => n.key == "steps" || n.key == "uses",
     );
     if (!steps.length) {
       throw new Error("No job.steps or job.uses found");

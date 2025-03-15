@@ -11,28 +11,28 @@ export default function (input, action, comment) {
 
   const regexpUpdate = new RegExp(
     `uses(\\s*):(\\s+)${quotePattern}${escapeStringRegexp(
-      actionId
+      actionId,
     )}@${escapeStringRegexp(currentVersion)}\\3(\\s*)#[^\\n]*`,
-    "g"
+    "g",
   );
 
   if (regexpUpdate.test(input)) {
     return input.replace(
       regexpUpdate,
-      `uses$1:$2$3${actionId}@${newVersion}$3$4#${newComment}`
+      `uses$1:$2$3${actionId}@${newVersion}$3$4#${newComment}`,
     );
   }
 
   const regexpPin = new RegExp(
     `uses(\\s*):(\\s+)${quotePattern}${escapeStringRegexp(
-      actionId
+      actionId,
     )}@${escapeStringRegexp(currentVersion)}\\3`,
-    "g"
+    "g",
   );
 
   return input.replace(
     regexpPin,
-    `uses$1:$2$3${actionId}@${newVersion}$3 #${newComment}`
+    `uses$1:$2$3${actionId}@${newVersion}$3 #${newComment}`,
   );
 }
 

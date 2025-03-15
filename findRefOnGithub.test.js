@@ -20,8 +20,8 @@ afterEach(() => {
   if (!nock.isDone()) {
     throw new Error(
       `Not all nock interceptors were used: ${JSON.stringify(
-        nock.pendingMocks()
-      )}`
+        nock.pendingMocks(),
+      )}`,
     );
   }
   nock.cleanAll();
@@ -34,15 +34,15 @@ test("looks up a specific hash", async () => {
   };
   mockRefLookupFailure(
     testAction,
-    "tags/73549280c1c566830040d9a01fe9050dae6a3036"
+    "tags/73549280c1c566830040d9a01fe9050dae6a3036",
   );
   mockRefLookupFailure(
     testAction,
-    "heads/73549280c1c566830040d9a01fe9050dae6a3036"
+    "heads/73549280c1c566830040d9a01fe9050dae6a3036",
   );
   mockCommitLookupSuccess(
     testAction,
-    "73549280c1c566830040d9a01fe9050dae6a3036"
+    "73549280c1c566830040d9a01fe9050dae6a3036",
   );
   const actual = await findRef(testAction);
   expect(actual).toEqual("73549280c1c566830040d9a01fe9050dae6a3036");
@@ -53,12 +53,12 @@ test("looks up a tag", async () => {
   mockTagRefLookupSuccess(
     testAction,
     "tags/v1",
-    "73549280c1c566830040d9a01fe9050dae6a3036"
+    "73549280c1c566830040d9a01fe9050dae6a3036",
   );
   mockTagLookupSuccess(
     testAction,
     "73549280c1c566830040d9a01fe9050dae6a3036",
-    "62ffef0ba7de4e1410b3c503be810ec23842e34a"
+    "62ffef0ba7de4e1410b3c503be810ec23842e34a",
   );
   const actual = await findRef(testAction);
   expect(actual).toEqual("62ffef0ba7de4e1410b3c503be810ec23842e34a");
@@ -69,7 +69,7 @@ test("looks up a branch", async () => {
   mockBranchRefLookupSuccess(
     action,
     "heads/master",
-    "73549280c1c566830040d9a01fe9050dae6a3036"
+    "73549280c1c566830040d9a01fe9050dae6a3036",
   );
   const actual = await findRef(action);
   expect(actual).toEqual("73549280c1c566830040d9a01fe9050dae6a3036");
@@ -80,7 +80,7 @@ test("fails to find ref (404)", () => {
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupFailure(action, "master");
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`
+    `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`,
   );
 });
 
@@ -89,7 +89,7 @@ test("fails to find ref (rate limiting)", () => {
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupRateLimit(action, "master");
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`
+    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`,
   );
 });
 
@@ -160,6 +160,6 @@ function mockCommitLookupRateLimit(action, commitSha) {
     .get(`/repos/${action.owner}/${action.repo}/commits/${commitSha}`)
     .reply(
       429,
-      "API rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)"
+      "API rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
     );
 }

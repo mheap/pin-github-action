@@ -11,7 +11,7 @@ export default async function (
   ignoreShas,
   allowEmpty,
   debug,
-  comment
+  comment,
 ) {
   allowed = allowed || [];
   ignoreShas = ignoreShas || false;
