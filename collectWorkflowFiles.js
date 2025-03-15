@@ -4,7 +4,12 @@ import path from "path";
 export default function (programArgs) {
   let filesToProcess = [];
 
-  for (const pathname of programArgs) {
+  for (let pathname of programArgs) {
+    if (process.env.WORKFLOWS_DIR) {
+      // If WORKFLOWS_DIR is set, prepend it to the pathname
+      pathname = path.join(process.env.WORKFLOWS_DIR, pathname);
+    }
+
     if (fs.lstatSync(pathname).isFile()) {
       filesToProcess.push(pathname);
     } else {
