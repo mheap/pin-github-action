@@ -57,7 +57,7 @@ npm install -g pin-github-action
 ### Docker
 
 ```bash
-alias pin-github-action="docker run --rm -v $(pwd):/src -e GITHUB_TOKEN mheap/pin-github-action"
+alias pin-github-action="docker run --rm -v $(pwd):/workflows -e GITHUB_TOKEN mheap/pin-github-action"
 ```
 
 ## Usage
