@@ -1,4 +1,4 @@
-import matcher from "matcher";
+import { matcher } from "matcher";
 
 let debug = () => {};
 export default function (input, ignored, log) {
