@@ -7,6 +7,7 @@ const debug = debugLib("pin-github-action");
 
 import run from "./index.js";
 import collectWorkflowFiles from "./collectWorkflowFiles.js";
+import addSecurity from "./addSecurity.js";
 
 const mainDebug = debug.extend("main-program");
 const packageDetails = JSON.parse(
@@ -38,6 +39,10 @@ const packageDetails = JSON.parse(
         "comment to add inline when pinning an action",
         " {ref}",
       )
+      .option(
+        "--enforce <filename>",
+        "create a workflow at <filename> that ensures all actions are pinned",
+      )
       .parse(process.argv);
 
     if (program.args.length === 0) {
@@ -49,6 +54,13 @@ const packageDetails = JSON.parse(
     let ignoreShas = program.opts().ignoreShas;
     let allowEmpty = program.opts().allowEmpty;
     let comment = program.opts().comment;
+
+    // Check if we're adding the security file
+    if (program.opts().enforce) {
+      const enforceFile = program.opts().enforce;
+      mainDebug("Adding security workflow to " + enforceFile);
+      await addSecurity(enforceFile, allowed, mainDebug);
+    }
 
     for (const pathname of program.args) {
       if (!fs.existsSync(pathname)) {
