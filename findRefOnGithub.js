@@ -11,13 +11,18 @@ if (process.env.GITHUB_TOKEN) {
   auth = process.env.GITHUB_TOKEN;
 }
 
-const github = new Octokit({
-  auth
-});
-
-let debug = () => {};
+let debug = () => { };
 export default function (action, log) {
   debug = log.extend("find-ref-on-github");
+
+  const github = new Octokit({
+    auth,
+    log: {
+      warn: debug,
+      error: debug
+    }
+  });
+
   return new Promise(async function (resolve, reject) {
     const owner = action.owner;
     const repo = action.repo;
