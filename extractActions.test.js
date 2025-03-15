@@ -5,7 +5,7 @@ const debug = debugLib("pin-github-action-test");
 import run from "./extractActions";
 const extractActions = (input, allowEmpty, comment) => {
   if (!comment) {
-    comment = " pin@{ref}";
+    comment = " {ref}";
   }
   return run.apply(null, [input, allowEmpty, comment, debug]);
 };
@@ -41,6 +41,31 @@ test("extracts a single version", () => {
 });
 
 test("extracts a pinned version", () => {
+  const input = YAML.parseDocument(`
+    name: PR
+    on:
+      - pull_request
+    jobs:
+      test-job:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Test Action Step
+            uses: "mheap/test-action@abc123" # master`);
+
+  const actual = extractActions(input);
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "abc123",
+      pinnedVersion: "master",
+    },
+  ]);
+});
+
+test("extracts a legacy pinned version", () => {
   const input = YAML.parseDocument(`
     name: PR
     on:

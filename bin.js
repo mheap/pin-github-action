@@ -10,7 +10,7 @@ import collectWorkflowFiles from "./collectWorkflowFiles.js";
 
 const mainDebug = debug.extend("main-program");
 const packageDetails = JSON.parse(
-  fs.readFileSync(new URL("./package.json", import.meta.url))
+  fs.readFileSync(new URL("./package.json", import.meta.url)),
 );
 
 (async () => {
@@ -22,20 +22,20 @@ const packageDetails = JSON.parse(
       .usage("[options] [file||directory ...]")
       .option(
         "-a, --allow <actions>",
-        "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*"
+        "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*",
       )
       .option(
         "-i, --ignore-shas",
-        "do not update any commits that are pinned at a sha"
+        "do not update any commits that are pinned at a sha",
       )
       .option(
         "-e, --allow-empty",
-        "allow workflows that do not contain any actions"
+        "allow workflows that do not contain any actions",
       )
       .option(
         "-c, --comment <string>",
         "comment to add inline when pinning an action",
-        " pin@{ref}"
+        " {ref}",
       )
       .parse(process.argv);
 
@@ -70,7 +70,7 @@ const packageDetails = JSON.parse(
         ignoreShas,
         allowEmpty,
         debug,
-        comment
+        comment,
       );
       fs.writeFileSync(filename, output.input);
     }

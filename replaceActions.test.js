@@ -29,7 +29,7 @@ test("replaces a single action with a SHA (workflow)", () => {
 
   const actual = replaceActions(input, { ...action });
 
-  expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
 test("supports a custom comment format (workflow)", () => {
@@ -70,7 +70,7 @@ test("replaces a single action with a SHA (composite)", () => {
 
   const actual = replaceActions(input, { ...action });
 
-  expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
 test("supports a custom comment format (composite)", () => {
@@ -104,7 +104,7 @@ test("replaces a single action with a SHA (reusable)", () => {
 
   const actual = replaceActions(input, { ...action }).toString();
 
-  expect(actual).toContain("uses: mheap/test-action@sha-here # pin@master");
+  expect(actual).toContain("uses: mheap/test-action@sha-here # master");
 });
 
 test("supports a custom comment format (reusable)", () => {
@@ -146,7 +146,7 @@ test("replaces an existing SHA with a different SHA, not changing the pinned bra
     newVersion: "sha-two",
   });
 
-  expect(actual).toContain("uses: mheap/test-action@sha-two # pin@v1");
+  expect(actual).toContain("uses: mheap/test-action@sha-two # v1");
 });
 
 test("maintains formatting when adding a pin", () => {
@@ -171,10 +171,10 @@ jobs:
 
   const actual = replaceActions(input, { ...action });
 
-  expect(actual).toContain("- uses: mheap/test-action@sha-here # pin@master");
-  expect(actual).toContain("uses:   mheap/test-action@sha-here # pin@master");
-  expect(actual).toContain("uses : mheap/test-action@sha-here # pin@master");
-  expect(actual).toMatch(/uses: mheap\/test-action@sha-here # pin@master$/);
+  expect(actual).toContain("- uses: mheap/test-action@sha-here # master");
+  expect(actual).toContain("uses:   mheap/test-action@sha-here # master");
+  expect(actual).toContain("uses : mheap/test-action@sha-here # master");
+  expect(actual).toMatch(/uses: mheap\/test-action@sha-here # master$/);
 });
 
 test("maintains formatting when updating a pin", () => {
@@ -185,32 +185,32 @@ jobs:
   test-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: mheap/test-action@sha-one # pin@v1
+      - uses: mheap/test-action@sha-one # v1
         name: test where uses comes after the dash
 
       - name: test with extra leading spaces
-        uses:   mheap/test-action@sha-one # pin@v1
+        uses:   mheap/test-action@sha-one # v1
 
       - name: test with space after 'uses'
-        uses : mheap/test-action@sha-one # pin@v1
+        uses : mheap/test-action@sha-one # v1
 
       - name: test with multiple spaces before the comment
-        uses: mheap/test-action@sha-one  # pin@v1
+        uses: mheap/test-action@sha-one  # v1
 
       - name: test without space after the comment starts
-        uses: mheap/test-action@sha-one #pin@v1
+        uses: mheap/test-action@sha-one #v1
 
       - name: test without space before the comment starts
-        uses: mheap/test-action@sha-one# pin@v1
+        uses: mheap/test-action@sha-one# v1
 
       - name: test without space before or after the comment start
-        uses:  mheap/test-action@sha-one#pin@v1
+        uses:  mheap/test-action@sha-one#v1
 
       - name: test with random comment
         uses:  mheap/test-action@sha-one # foobar
 
       - name: no final newline
-        uses: mheap/test-action@sha-one # pin@v1`;
+        uses: mheap/test-action@sha-one # v1`;
 
   const actual = replaceActions(input, {
     ...action,
@@ -219,15 +219,15 @@ jobs:
     newVersion: "sha-two",
   });
 
-  expect(actual).toContain("- uses: mheap/test-action@sha-two # pin@v1");
-  expect(actual).toContain("uses:   mheap/test-action@sha-two # pin@v1");
-  expect(actual).toContain("uses : mheap/test-action@sha-two # pin@v1");
-  expect(actual).toContain("uses: mheap/test-action@sha-two  # pin@v1");
-  expect(actual).toContain("uses: mheap/test-action@sha-two # pin@v1");
-  expect(actual).toContain("uses: mheap/test-action@sha-two# pin@v1");
-  expect(actual).toContain("uses:  mheap/test-action@sha-two# pin@v1");
-  expect(actual).toContain("uses:  mheap/test-action@sha-two # pin@v1");
-  expect(actual).toMatch(/uses: mheap\/test-action@sha-two # pin@v1$/);
+  expect(actual).toContain("- uses: mheap/test-action@sha-two # v1");
+  expect(actual).toContain("uses:   mheap/test-action@sha-two # v1");
+  expect(actual).toContain("uses : mheap/test-action@sha-two # v1");
+  expect(actual).toContain("uses: mheap/test-action@sha-two  # v1");
+  expect(actual).toContain("uses: mheap/test-action@sha-two # v1");
+  expect(actual).toContain("uses: mheap/test-action@sha-two# v1");
+  expect(actual).toContain("uses:  mheap/test-action@sha-two# v1");
+  expect(actual).toContain("uses:  mheap/test-action@sha-two # v1");
+  expect(actual).toMatch(/uses: mheap\/test-action@sha-two # v1$/);
 });
 
 test("maintains indentation when adding a pin", () => {
@@ -243,9 +243,7 @@ jobs:
 `;
 
   let actual = replaceActions(input, { ...action });
-  expect(actual).toContain(
-    "        uses: mheap/test-action@sha-here # pin@master"
-  );
+  expect(actual).toContain("        uses: mheap/test-action@sha-here # master");
 
   input = `name: PR
 on:
@@ -259,9 +257,7 @@ jobs:
 `;
 
   actual = replaceActions(input, { ...action });
-  expect(actual).toContain(
-    "      uses: mheap/test-action@sha-here # pin@master"
-  );
+  expect(actual).toContain("      uses: mheap/test-action@sha-here # master");
 });
 
 test("maintains indentation when updating a pin", () => {
@@ -273,7 +269,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test indentation #1
-        uses: mheap/test-action@sha-one # pin@v1
+        uses: mheap/test-action@sha-one # v1
 `;
 
   let actual = replaceActions(input, {
@@ -282,7 +278,7 @@ jobs:
     currentVersion: "sha-one",
     newVersion: "sha-two",
   });
-  expect(actual).toContain("        uses: mheap/test-action@sha-two # pin@v1");
+  expect(actual).toContain("        uses: mheap/test-action@sha-two # v1");
 
   input = `name: PR
 on:
@@ -292,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: test indentation #2
-      uses: mheap/test-action@sha-one # pin@v1
+      uses: mheap/test-action@sha-one # v1
 `;
 
   actual = replaceActions(input, {
@@ -301,7 +297,7 @@ jobs:
     currentVersion: "sha-one",
     newVersion: "sha-two",
   });
-  expect(actual).toContain("      uses: mheap/test-action@sha-two # pin@v1");
+  expect(actual).toContain("      uses: mheap/test-action@sha-two # v1");
 });
 
 test("handles RegExp meta-characters", () => {
@@ -313,7 +309,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test indentation #1
-        uses: mheap/test-action@sha-one # pin@v1
+        uses: mheap/test-action@sha-one # v1
 `;
 
   expect(() => {
@@ -344,8 +340,8 @@ jobs:
         uses: 'mheap/test-action@master'`;
 
   const actual = replaceActions(input, { ...action });
-  expect(actual).toContain('uses: "mheap/test-action@sha-here" # pin@master');
-  expect(actual).toContain("uses: 'mheap/test-action@sha-here' # pin@master");
+  expect(actual).toContain('uses: "mheap/test-action@sha-here" # master');
+  expect(actual).toContain("uses: 'mheap/test-action@sha-here' # master");
 });
 
 test("supports single and double quotes uses values when updating a pin", () => {
@@ -357,10 +353,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test where uses comes after the dash
-        uses: "mheap/test-action@sha-one" # pin@v1
+        uses: "mheap/test-action@sha-one" # v1
 
       - name: test with extra leading spaces
-        uses: 'mheap/test-action@sha-one' # pin@v1`;
+        uses: 'mheap/test-action@sha-one' # v1`;
 
   const actual = replaceActions(input, {
     ...action,
@@ -369,8 +365,8 @@ jobs:
     newVersion: "sha-two",
   });
 
-  expect(actual).toContain('uses: "mheap/test-action@sha-two" # pin@v1');
-  expect(actual).toContain("uses: 'mheap/test-action@sha-two' # pin@v1");
+  expect(actual).toContain('uses: "mheap/test-action@sha-two" # v1');
+  expect(actual).toContain("uses: 'mheap/test-action@sha-two' # v1");
 });
 
 function convertToYaml(input) {

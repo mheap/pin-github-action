@@ -1,11 +1,28 @@
 import { Octokit } from "@octokit/rest";
-const github = new Octokit({
-  auth: process.env.GH_ADMIN_TOKEN,
-});
+let auth = "";
+
+// Legacy format
+if (process.env.GH_ADMIN_TOKEN) {
+  auth = process.env.GH_ADMIN_TOKEN;
+}
+
+// New format
+if (process.env.GITHUB_TOKEN) {
+  auth = process.env.GITHUB_TOKEN;
+}
 
 let debug = () => {};
 export default function (action, log) {
   debug = log.extend("find-ref-on-github");
+
+  const github = new Octokit({
+    auth,
+    log: {
+      warn: debug,
+      error: debug,
+    },
+  });
+
   return new Promise(async function (resolve, reject) {
     const owner = action.owner;
     const repo = action.repo;
@@ -55,7 +72,7 @@ export default function (action, log) {
     // If we get this far, have we been provided with a specific commit SHA?
     try {
       debug(
-        `[${name}] Provided version is not a ref. Checking if it's a commit SHA`
+        `[${name}] Provided version is not a ref. Checking if it's a commit SHA`,
       );
       const commit = await github.repos.getCommit({
         owner,
@@ -70,7 +87,7 @@ export default function (action, log) {
     }
 
     return reject(
-      `Unable to find SHA for ${owner}/${repo}@${pinned}\n${error}`
+      `Unable to find SHA for ${owner}/${repo}@${pinned}\n${error}`,
     );
   });
 }
@@ -78,9 +95,9 @@ export default function (action, log) {
 function handleCommonErrors(e, name) {
   if (e.status == 404) {
     debug(
-      `[${name}] ERROR: Could not find repo. It may be private, or it may not exist`
+      `[${name}] ERROR: Could not find repo. It may be private, or it may not exist`,
     );
-    return "Private repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA";
+    return "Private repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA";
   }
 
   if (e.message.includes("API rate limit exceeded")) {

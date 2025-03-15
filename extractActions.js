@@ -43,7 +43,7 @@ function extractFromWorkflow(input, allowEmpty, comment) {
   for (let job of jobs) {
     // Check for
     let steps = job.value.items.filter(
-      (n) => n.key == "steps" || n.key == "uses"
+      (n) => n.key == "steps" || n.key == "uses",
     );
     if (!steps.length) {
       throw new Error("No job.steps or job.uses found");
@@ -93,6 +93,11 @@ function handleStep(actions, items, comment) {
     let original = (use.value.comment || "").replace(comment, "");
     if (!original) {
       original = details.currentVersion;
+    }
+
+    // Legacy format, strip pin@ off
+    if (original.includes("pin@")) {
+      original = original.replace("pin@", "");
     }
 
     actions.add({ ...details, pinnedVersion: original });
