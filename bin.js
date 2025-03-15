@@ -19,7 +19,8 @@ const packageDetails = JSON.parse(
     program
       .name("pin-github-action")
       .version(packageDetails.version)
-      .usage("[options] [file||directory ...]")
+      .usage("[options] <file or directory ...>")
+      .argument("<file or directory ...>", "YAML file or directory to process")
       .option(
         "-a, --allow <actions>",
         "comma separated list of actions to allow e.g. mheap/debug-action. May be a glob e.g. mheap/*",
