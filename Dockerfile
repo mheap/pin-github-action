@@ -13,7 +13,9 @@ RUN npm install --production
 # Copy the application source code
 COPY . .
 
+WORKDIR /workflows
+
 # Set the entry point for the container to run the CLI
 # Replace 'your-cli-command' with the actual command of your CLI app
-ENTRYPOINT ["node", "bin.js"]
+ENTRYPOINT ["node", "/src/bin.js"]
 
