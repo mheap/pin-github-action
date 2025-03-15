@@ -57,7 +57,7 @@ npm install -g pin-github-action
 ### Docker
 
 ```bash
-alias pin-github-action="docker run --rm -v $(pwd):/src -e GH_ADMIN_TOKEN mheap/pin-github-action"
+alias pin-github-action="docker run --rm -v $(pwd):/src -e GITHUB_TOKEN mheap/pin-github-action"
 ```
 
 ## Usage
@@ -78,7 +78,7 @@ If you use private actions (or are hitting rate limits), you'll need to provide
 a GitHub access token:
 
 ```bash
-GH_ADMIN_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/your-name.yml
+GITHUB_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
 Run it as many times as you like! Each time you run the tool the exact SHA will

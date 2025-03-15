@@ -1,6 +1,18 @@
 import { Octokit } from "@octokit/rest";
+let auth = "";
+
+// Legacy format
+if (process.env.GH_ADMIN_TOKEN) {
+  auth = process.env.GH_ADMIN_TOKEN;
+}
+
+// New format
+if (process.env.GITHUB_TOKEN) {
+  auth = process.env.GITHUB_TOKEN;
+}
+
 const github = new Octokit({
-  auth: process.env.GH_ADMIN_TOKEN,
+  auth
 });
 
 let debug = () => {};
@@ -80,7 +92,7 @@ function handleCommonErrors(e, name) {
     debug(
       `[${name}] ERROR: Could not find repo. It may be private, or it may not exist`
     );
-    return "Private repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA";
+    return "Private repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA";
   }
 
   if (e.message.includes("API rate limit exceeded")) {

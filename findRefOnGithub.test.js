@@ -80,7 +80,7 @@ test("fails to find ref (404)", () => {
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupFailure(action, "master");
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GH_ADMIN_TOKEN to fetch the latest SHA`
+    `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`
   );
 });
 
