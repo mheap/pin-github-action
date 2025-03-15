@@ -147,14 +147,24 @@ Examples:
 - Partial match: `actions/*`
 - Negated match: `!actions/*` (will only pin `actions/*` actions)
 
-## Customising the pin@{ref} comment
+## Enforcing that all actions are pinned
+
+You can use [ensure-sha-pinned-actions](https://github.com/zgosalvez/github-actions-ensure-sha-pinned-actions) to fail the build if any workflows contain an unpinned action.
+
+To enable this, pass the `--enforce` flag containing a workflow name to create:
+
+```bash
+pin-github-action --enforce .github/workflows/security.yaml .github/workflows
+```
+
+If you specify the `--allow` flag, these actions will be added to the `allowlist` in the `ensure-sha-pinned-actions` action too.
+
+## Customising the {ref} comment
 
 You can specify a comment containing the `{ref}` placeholder to customise the comment added.
 
-To add [support for renovate](https://github.com/mheap/pin-github-action/issues/140), run with the following options (note the leading space):
-
 ```bash
-pin-github-action -c " {ref}" /path/to/workflow.yaml
+pin-github-action -c " pin@{ref}" /path/to/workflow.yaml
 ```
 
 ## How it works
