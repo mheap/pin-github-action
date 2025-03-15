@@ -35,7 +35,7 @@ const packageDetails = JSON.parse(
       .option(
         "-c, --comment <string>",
         "comment to add inline when pinning an action",
-        " pin@{ref}"
+        " {ref}"
       )
       .parse(process.argv);
 

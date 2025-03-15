@@ -95,6 +95,11 @@ function handleStep(actions, items, comment) {
       original = details.currentVersion;
     }
 
+    // Legacy format, strip pin@ off
+    if (original.includes("pin@")) {
+      original = original.replace("pin@", "");
+    }
+
     actions.add({ ...details, pinnedVersion: original });
   }
 

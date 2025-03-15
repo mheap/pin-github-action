@@ -38,7 +38,7 @@ export default function (input, action, comment) {
 
 function generateComment(action, comment) {
   if (!comment) {
-    comment = ` pin@{ref}`;
+    comment = ` {ref}`;
   }
   return `${comment.replace("{ref}", action.pinnedVersion)}`;
 }
