@@ -74,17 +74,32 @@ const packageDetails = JSON.parse(
       throw "Didn't find Y(A)ML files in provided paths: " + program.args;
     }
 
+    const shouldFailFast = filesToProcess.length === 1;
+
     for (const filename of filesToProcess) {
       mainDebug("Processing " + filename);
       const input = fs.readFileSync(filename).toString();
-      const output = await run(
-        input,
-        allowed,
-        ignoreShas,
-        allowEmpty,
-        debug,
-        comment,
-      );
+      let output;
+      try {
+        output = await run(
+          input,
+          allowed,
+          ignoreShas,
+          allowEmpty,
+          debug,
+          comment,
+        );
+      }
+      catch (e) {
+        if (shouldFailFast) {
+          throw e;
+        }
+        else {
+          console.error(`Failed to process ${filename} due to: ${e.message || e}`);
+          console.error(`Continuing with next file because multiple files are being processed...`);
+          continue;
+        }
+      }
       fs.writeFileSync(filename, output.input);
     }
 
