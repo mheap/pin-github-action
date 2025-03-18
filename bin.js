@@ -40,6 +40,10 @@ const packageDetails = JSON.parse(
         " {ref}",
       )
       .option(
+        "--continue-on-error",
+        "continue processing files even if an error occurs",
+      )
+      .option(
         "--enforce <filename>",
         "create a workflow at <filename> that ensures all actions are pinned",
       )
@@ -54,6 +58,7 @@ const packageDetails = JSON.parse(
     let ignoreShas = program.opts().ignoreShas;
     let allowEmpty = program.opts().allowEmpty;
     let comment = program.opts().comment;
+    const continueOnError = program.opts().continueOnError;
 
     // Check if we're adding the security file
     if (program.opts().enforce) {
@@ -74,8 +79,6 @@ const packageDetails = JSON.parse(
       throw "Didn't find Y(A)ML files in provided paths: " + program.args;
     }
 
-    const shouldFailFast = filesToProcess.length === 1;
-
     for (const filename of filesToProcess) {
       mainDebug("Processing " + filename);
       const input = fs.readFileSync(filename).toString();
@@ -91,7 +94,7 @@ const packageDetails = JSON.parse(
         );
       }
       catch (e) {
-        if (shouldFailFast) {
+        if (!continueOnError) {
           throw e;
         }
         else {
