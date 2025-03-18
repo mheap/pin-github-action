@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-
+import * as fs from "fs/promises";
 let workflow = `
 on: push
 
@@ -42,11 +41,12 @@ export default async function (filename, allowed, log) {
         repo = repo.slice(0, -1); // Remove the trailing *
       }
 
-      workflow += `\n            - ${repo}`;
+      workflow += `\n            ${repo}`;
     });
   }
   workflow += "\n";
 
   // Write the workflow to the file
   await fs.writeFile(filename, workflow);
+  return true;
 }
