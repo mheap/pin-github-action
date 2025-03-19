@@ -12,7 +12,7 @@ export default function (input, action, comment) {
   const regexpUpdate = new RegExp(
     `uses(\\s*):(\\s+)${quotePattern}${escapeStringRegexp(
       actionId,
-    )}@${escapeStringRegexp(currentVersion)}\\3(\\s*)#[^\\n]*`,
+    )}@${escapeStringRegexp(currentVersion)}\\3([\\t ]*)#[^\\n]*`,
     "g",
   );
 
