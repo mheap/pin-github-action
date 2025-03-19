@@ -369,6 +369,37 @@ jobs:
   expect(actual).toContain("uses: 'mheap/test-action@sha-two' # v1");
 });
 
+test("does not replace comments on the next line", () => {
+  let input = `name: PR
+on:
+  - pull_request
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/test-action@master
+
+      # This is a comment that should be untouched
+      - uses: mheap/test-action@master
+`;
+
+  let expected = `name: PR
+on:
+  - pull_request
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/test-action@sha-here # master
+
+      # This is a comment that should be untouched
+      - uses: mheap/test-action@sha-here # master
+`;
+
+  let actual = replaceActions(input, { ...action });
+  expect(actual).toBe(expected);
+});
+
 function convertToYaml(input) {
   return YAML.stringify(input);
 }
