@@ -41,7 +41,13 @@ function extractFromWorkflow(input, allowEmpty, comment) {
   }
 
   for (let job of jobs) {
-    // Check for
+    if (!job.value) {
+      throw new Error(
+        "Error parsing workflow. Is this a valid GitHub Actions workflow?\n\n" +
+          input.toString(),
+      );
+    }
+
     let steps = job.value.items.filter(
       (n) => n.key == "steps" || n.key == "uses",
     );
