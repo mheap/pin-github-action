@@ -101,8 +101,14 @@ function handleCommonErrors(e, name) {
   }
 
   if (e.message.includes("API rate limit exceeded")) {
-    debug(`[${name}] ERROR: Rate Limiting error`);
-    return e.message;
+    const resetTime = e.response?.headers["x-ratelimit-reset"];
+    const resetDate = resetTime
+      ? new Date(resetTime * 1000).toLocaleString()
+      : "unknown";
+    debug(
+      `[${name}] ERROR: Rate Limiting error. Limit resets at: ${resetDate}`,
+    );
+    return `${e.message} Limit resets at: ${resetDate}`;
   }
   return "";
 }

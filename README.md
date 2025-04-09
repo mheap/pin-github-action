@@ -178,3 +178,19 @@ pin-github-action -c " pin@{ref}" /path/to/workflow.yaml
 - Look up the current SHA for each repo on GitHub and update the action to use the specific hash
   - If needed, add a comment with the target pinned version
 - Write the workflow file with the new pinned version and original target version as a comment
+
+## Contributing
+
+1. **Run tests**: Ensure all tests pass before submitting your changes.
+
+```bash
+npm install
+npm test
+```
+
+2. **Build and test locally using Docker**: You can build a container and test the application locally.
+
+```bash
+docker build -t pin-github-action .
+docker run --rm -v $(pwd):/workflows -e GITHUB_TOKEN=<your-token-here> pin-github-action /path/to/.github/workflows/your-name.yml
+```
