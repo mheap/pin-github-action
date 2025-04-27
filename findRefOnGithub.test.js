@@ -88,8 +88,9 @@ test("fails to find ref (rate limiting)", () => {
   mockRefLookupFailure(action, "tags/master");
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupRateLimit(action, "master");
+  const resetDate = new Date(1744211324000).toLocaleString();
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`,
+    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) Limit resets at: ${resetDate}`,
   );
 });
 
@@ -161,5 +162,8 @@ function mockCommitLookupRateLimit(action, commitSha) {
     .reply(
       429,
       "API rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      {
+        "x-ratelimit-reset": "1744211324",
+      },
     );
 }
