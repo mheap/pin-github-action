@@ -68,10 +68,16 @@ Use on single file:
 pin-github-action /path/to/.github/workflows/your-name.yml
 ```
 
-Use on all YAML|YML files in directory:
+Use on all YAML|YML files in a single directory:
 
 ```bash
 pin-github-action /path/to/.github/workflows/
+```
+
+Use on all YAML|YML files in directory tree:
+
+```bash
+pin-github-action --recursive /path/to/.github/workflows/
 ```
 
 If you run the tool on a directory and want to continue processing when a single file fails, pass the `--continue-on-error` parameter:

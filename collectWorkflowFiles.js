@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
+import glob from "fast-glob";
 
-export default function (programArgs) {
+export default function (programArgs, recursive) {
   let filesToProcess = [];
 
   for (let pathname of programArgs) {
@@ -13,12 +14,11 @@ export default function (programArgs) {
     if (fs.lstatSync(pathname).isFile()) {
       filesToProcess.push(pathname);
     } else {
-      const files = fs
-        .readdirSync(pathname)
-        .filter((f) => {
-          return f.includes(".yaml") || f.includes(".yml");
-        })
-        .map((f) => path.join(pathname, f));
+      let globPattern = "*/*.{yaml,yml}";
+      if (recursive) {
+        globPattern = "**/*.{yaml,yml}";
+      }
+      const files = glob.sync(globPattern);
       filesToProcess = filesToProcess.concat(files);
     }
   }

@@ -29,6 +29,7 @@
     "commander": "^13",
     "debug": "^4.4.0",
     "escape-string-regexp": "^5.0.0",
+    "fast-glob": "^3.3.3",
     "matcher": "^5.0.0",
     "yaml": "^2.7.0"
   },

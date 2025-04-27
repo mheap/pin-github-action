@@ -44,6 +44,10 @@ const packageDetails = JSON.parse(
         "continue processing files even if an error occurs",
       )
       .option(
+        "--recursive",
+        "when processing directories, search recursively for YAML files",
+      )
+      .option(
         "--enforce <filename>",
         "create a workflow at <filename> that ensures all actions are pinned",
       )
@@ -73,7 +77,10 @@ const packageDetails = JSON.parse(
       }
     }
 
-    const filesToProcess = collectWorkflowFiles(program.args);
+    const filesToProcess = collectWorkflowFiles(
+      program.args,
+      program.opts().recursive,
+    );
 
     if (filesToProcess.length === 0) {
       throw "Didn't find Y(A)ML files in provided paths: " + program.args;
@@ -92,14 +99,16 @@ const packageDetails = JSON.parse(
           debug,
           comment,
         );
-      }
-      catch (e) {
+      } catch (e) {
         if (!continueOnError) {
           throw e;
-        }
-        else {
-          console.error(`Failed to process ${filename} due to: ${e.message || e}`);
-          console.error(`Continuing with next file because multiple files are being processed...`);
+        } else {
+          console.error(
+            `Failed to process ${filename} due to: ${e.message || e}`,
+          );
+          console.error(
+            `Continuing with next file because multiple files are being processed...`,
+          );
           continue;
         }
       }
