@@ -40,6 +40,10 @@ const packageDetails = JSON.parse(
         " {ref}",
       )
       .option(
+        "--continue-on-error",
+        "continue processing files even if an error occurs",
+      )
+      .option(
         "--enforce <filename>",
         "create a workflow at <filename> that ensures all actions are pinned",
       )
@@ -54,6 +58,7 @@ const packageDetails = JSON.parse(
     let ignoreShas = program.opts().ignoreShas;
     let allowEmpty = program.opts().allowEmpty;
     let comment = program.opts().comment;
+    const continueOnError = program.opts().continueOnError;
 
     // Check if we're adding the security file
     if (program.opts().enforce) {
@@ -77,14 +82,27 @@ const packageDetails = JSON.parse(
     for (const filename of filesToProcess) {
       mainDebug("Processing " + filename);
       const input = fs.readFileSync(filename).toString();
-      const output = await run(
-        input,
-        allowed,
-        ignoreShas,
-        allowEmpty,
-        debug,
-        comment,
-      );
+      let output;
+      try {
+        output = await run(
+          input,
+          allowed,
+          ignoreShas,
+          allowEmpty,
+          debug,
+          comment,
+        );
+      }
+      catch (e) {
+        if (!continueOnError) {
+          throw e;
+        }
+        else {
+          console.error(`Failed to process ${filename} due to: ${e.message || e}`);
+          console.error(`Continuing with next file because multiple files are being processed...`);
+          continue;
+        }
+      }
       fs.writeFileSync(filename, output.input);
     }
 

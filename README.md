@@ -74,6 +74,12 @@ Use on all YAML|YML files in directory:
 pin-github-action /path/to/.github/workflows/
 ```
 
+If you run the tool on a directory and want to continue processing when a single file fails, pass the `--continue-on-error` parameter:
+
+```bash
+pin-github-action --continue-on-error /path/to/.github/workflows/
+```
+
 If you use private actions (or are hitting rate limits), you'll need to provide
 a GitHub access token:
 
