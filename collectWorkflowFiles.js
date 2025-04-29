@@ -14,11 +14,12 @@ export default function (programArgs, recursive) {
     if (fs.lstatSync(pathname).isFile()) {
       filesToProcess.push(pathname);
     } else {
-      let globPattern = "*/*.{yaml,yml}";
+      let globPattern = "*.{yaml,yml}";
       if (recursive) {
         globPattern = "**/*.{yaml,yml}";
       }
-      const files = glob.sync(globPattern);
+
+      const files = glob.sync(path.join(`${pathname}`, globPattern));
       filesToProcess = filesToProcess.concat(files);
     }
   }
