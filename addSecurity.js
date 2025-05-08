@@ -4,6 +4,9 @@ on: push
 
 name: Security
 
+permissions:
+  contents: read
+
 jobs:
   ensure-pinned-actions:
     runs-on: ubuntu-latest
