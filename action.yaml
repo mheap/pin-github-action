@@ -1,0 +1,34 @@
+name: Pin Github Action
+description: Pin all Github Actions to a specific sha version
+runs:
+  using: docker
+  image: 'Dockerfile'
+  entrypoint: 'entrypoint.sh'
+  args: ${{ inputs.workflows_path }}
+  env: 
+    GITHUB_TOKEN: ${{ inputs.github_token }}
+    ALLOW_UNPINNED: ${{ inputs.allow_unpinned }}
+    ENFORCE: ${{ inputs.enforce }}
+    CONTINUE_ON_ERROR: ${{ inputs.continue_on_error }}
+inputs:
+  github_token:
+    description: 'Github token required to access private actions'
+    default: '${{ github.token }}'
+    required: false
+  workflows_path:
+    description: 'Path to workflows directory'
+    default: '.github/workflows'
+    required: false
+  allow_unpinned:
+    description: 'Name an action or glob of actions to leave unpinned'
+    default: ''
+    required: false
+  enforce:
+    description: 'Fail if unpinned actions are found'
+    default: 'false'
+    required: false
+  continue_on_error:
+    description: 'Continue on error. Setting this to false will stop on the first error'
+    default: 'false'
+    required: false
+  
