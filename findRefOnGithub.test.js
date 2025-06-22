@@ -3,7 +3,7 @@ nock.disableNetConnect();
 
 import debugLib from "debug";
 const debug = debugLib("pin-github-action-test");
-import run from "./findRefOnGithub";
+import run, { clearCache } from "./findRefOnGithub";
 const findRef = (action) => {
   return run.apply(null, [action, debug]);
 };
@@ -25,6 +25,7 @@ afterEach(() => {
     );
   }
   nock.cleanAll();
+  clearCache();
 });
 
 test("looks up a specific hash", async () => {
@@ -91,6 +92,53 @@ test("fails to find ref (rate limiting)", () => {
   const resetDate = new Date(1744211324000).toLocaleString();
   return expect(findRef(action)).rejects.toEqual(
     `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) Limit resets at: ${resetDate}`,
+  );
+});
+
+test("uses cache for duplicate requests", async () => {
+  const testAction = {
+    ...action,
+    pinnedVersion: "v1.0.0",
+  };
+
+  // Mock only one set of API calls for the first request
+  // This validates caching because the second call would fail if it tried to make API requests
+  // (nock would throw "Nock: No match for request" since no additional mocks are set up)
+  mockTagRefLookupSuccess(testAction, "tags/v1.0.0", "tag-sha-123");
+  mockTagLookupSuccess(testAction, "tag-sha-123", "commit-sha-456");
+
+  // First call should make API requests
+  const result1 = await findRef(testAction);
+  expect(result1).toEqual("commit-sha-456");
+
+  // Second call must use cache (would fail if it tried to make API requests)
+  const result2 = await findRef(testAction);
+  expect(result2).toEqual("commit-sha-456");
+
+  // Both results should be identical
+  expect(result1).toEqual(result2);
+});
+
+test("duplicate requests without cache would fail", async () => {
+  const testAction = {
+    ...action,
+    pinnedVersion: "v2.0.0",
+  };
+
+  // Mock only one set of API calls
+  mockTagRefLookupSuccess(testAction, "tags/v2.0.0", "tag-sha-789");
+  mockTagLookupSuccess(testAction, "tag-sha-789", "commit-sha-abc");
+
+  // First call should succeed
+  const result1 = await findRef(testAction);
+  expect(result1).toEqual("commit-sha-abc");
+
+  // Clear cache to simulate what would happen without caching
+  clearCache();
+
+  // Second call should fail because no mocks are available
+  await expect(findRef(testAction)).rejects.toEqual(
+    `Unable to find SHA for nexmo/github-actions@v2.0.0\n`,
   );
 });
 

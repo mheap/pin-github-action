@@ -11,6 +11,14 @@ if (process.env.GITHUB_TOKEN) {
   auth = process.env.GITHUB_TOKEN;
 }
 
+// In-memory cache for resolved SHA commits
+const shaCache = new Map();
+
+// Export function to clear cache (for testing)
+export function clearCache() {
+  shaCache.clear();
+}
+
 let debug = () => {};
 export default function (action, log) {
   debug = log.extend("find-ref-on-github");
@@ -28,6 +36,13 @@ export default function (action, log) {
     const repo = action.repo;
     const pinned = action.pinnedVersion;
     const name = `${owner}/${repo}`;
+    const cacheKey = `${name}@${pinned}`;
+
+    // Check cache first
+    if (shaCache.has(cacheKey)) {
+      debug(`[${name}] Using cached SHA for ${pinned}`);
+      return resolve(shaCache.get(cacheKey));
+    }
 
     let error;
 
@@ -54,12 +69,15 @@ export default function (action, log) {
             tag_sha: object.sha,
           });
           debug(`[${name}] Fetched commit. Found SHA.`);
-          return resolve(tag.data.object.sha);
+          const sha = tag.data.object.sha;
+          shaCache.set(cacheKey, sha);
+          return resolve(sha);
         }
 
         // If it's already a commit, return that
         if (object.type === "commit") {
           debug(`[${name}] Ref is a commit. Found SHA.`);
+          shaCache.set(cacheKey, object.sha);
           return resolve(object.sha);
         }
       } catch (e) {
@@ -79,7 +97,9 @@ export default function (action, log) {
         repo,
         ref: pinned,
       });
-      return resolve(commit.data.sha);
+      const sha = commit.data.sha;
+      shaCache.set(cacheKey, sha);
+      return resolve(sha);
     } catch (e) {
       // If it's not a commit, it doesn't matter
       debug(`[${name}] Error fetching commit: ${e.message}`);
