@@ -16,6 +16,10 @@
   ],
   "author": "Michael Heap <m@michaelheap.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mheap/pin-github-action.git"
+  },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^9",
