@@ -81,7 +81,12 @@ test("fails to find ref (404)", () => {
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupFailure(action, "master");
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nPrivate repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`,
+    `Unable to find SHA for nexmo/github-actions@master\n` +
+      `  - tried tags/master: HTTP 404: Not Found - the ref or repo may not exist\n` +
+      `  - tried heads/master: HTTP 404: Not Found - the ref or repo may not exist\n` +
+      `  - tried commit 'master': HTTP 404: Not Found - the ref or repo may not exist\n` +
+      `\n` +
+      `Private repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`,
   );
 });
 
@@ -90,8 +95,15 @@ test("fails to find ref (rate limiting)", () => {
   mockRefLookupFailure(action, "heads/master");
   mockCommitLookupRateLimit(action, "master");
   const resetDate = new Date(1744211324000).toLocaleString();
+  const rateLimitMsg =
+    "API rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)";
   return expect(findRef(action)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@master\nAPI rate limit exceeded for 1.2.3.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) Limit resets at: ${resetDate}`,
+    `Unable to find SHA for nexmo/github-actions@master\n` +
+      `  - tried tags/master: HTTP 404: Not Found - the ref or repo may not exist\n` +
+      `  - tried heads/master: HTTP 404: Not Found - the ref or repo may not exist\n` +
+      `  - tried commit 'master': HTTP 429: ${rateLimitMsg} Limit resets at: ${resetDate}\n` +
+      `\n` +
+      `Private repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA`,
   );
 });
 
@@ -137,8 +149,8 @@ test("duplicate requests without cache would fail", async () => {
   clearCache();
 
   // Second call should fail because no mocks are available
-  await expect(findRef(testAction)).rejects.toEqual(
-    `Unable to find SHA for nexmo/github-actions@v2.0.0\n`,
+  await expect(findRef(testAction)).rejects.toContain(
+    "Unable to find SHA for nexmo/github-actions@v2.0.0",
   );
 });
 

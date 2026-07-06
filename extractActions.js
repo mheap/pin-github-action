@@ -96,7 +96,7 @@ function handleStep(actions, items, comment) {
 
     comment = comment.replace("{ref}", "");
 
-    let original = (use.value.comment || "").replace(comment, "");
+    let original = (use.value.comment || "").replace(comment, "").trim();
     if (!original) {
       original = details.currentVersion;
     }

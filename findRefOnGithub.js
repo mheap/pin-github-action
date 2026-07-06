@@ -44,7 +44,7 @@ export default function (action, log) {
       return resolve(shaCache.get(cacheKey));
     }
 
-    let error;
+    const errors = [];
 
     // In order: Tag, Branch
     const possibleRefs = [`tags/${pinned}`, `heads/${pinned}`];
@@ -83,7 +83,7 @@ export default function (action, log) {
       } catch (e) {
         // We can ignore failures as we validate later
         debug(`[${name}] Error fetching ref: ${e.message}`);
-        error = handleCommonErrors(e, name);
+        errors.push(`  - tried ${ref}: ${formatError(e, name)}`);
       }
     }
 
@@ -103,32 +103,33 @@ export default function (action, log) {
     } catch (e) {
       // If it's not a commit, it doesn't matter
       debug(`[${name}] Error fetching commit: ${e.message}`);
-      error = handleCommonErrors(e, name);
+      errors.push(`  - tried commit '${pinned}': ${formatError(e, name)}`);
     }
 
-    return reject(
-      `Unable to find SHA for ${owner}/${repo}@${pinned}\n${error}`,
-    );
+    let message = `Unable to find SHA for ${owner}/${repo}@${pinned}\n${errors.join("\n")}`;
+    if (!process.env.GITHUB_TOKEN) {
+      message +=
+        "\n\nPrivate repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA";
+    }
+    return reject(message);
   });
 }
 
-function handleCommonErrors(e, name) {
-  if (e.status == 404) {
-    debug(
-      `[${name}] ERROR: Could not find repo. It may be private, or it may not exist`,
-    );
-    return "Private repos require you to set process.env.GITHUB_TOKEN to fetch the latest SHA";
-  }
+function formatError(e, name) {
+  const status = e.status || "unknown";
+  let detail = "";
 
-  if (e.message.includes("API rate limit exceeded")) {
+  if (status == 404) {
+    detail = "Not Found - the ref or repo may not exist";
+  } else if (e.message.includes("API rate limit exceeded")) {
     const resetTime = e.response?.headers["x-ratelimit-reset"];
     const resetDate = resetTime
       ? new Date(resetTime * 1000).toLocaleString()
       : "unknown";
-    debug(
-      `[${name}] ERROR: Rate Limiting error. Limit resets at: ${resetDate}`,
-    );
-    return `${e.message} Limit resets at: ${resetDate}`;
+    detail = `${e.message} Limit resets at: ${resetDate}`;
+  } else {
+    detail = e.message;
   }
-  return "";
+
+  return `HTTP ${status}: ${detail}`;
 }
