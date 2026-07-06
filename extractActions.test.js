@@ -360,6 +360,31 @@ test("does not throw with missing uses when allowEmpty is enabled", () => {
   expect(actual).toEqual([]);
 });
 
+test("trims whitespace from pinned version in comments", () => {
+  const input = YAML.parseDocument(`
+    name: PR
+    on:
+      - pull_request
+    jobs:
+      test-job:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Test Action Step
+            uses: "mheap/test-action@abc123" #  v1.0.0 `);
+
+  const actual = extractActions(input);
+
+  expect(actual).toEqual([
+    {
+      owner: "mheap",
+      repo: "test-action",
+      path: "",
+      currentVersion: "abc123",
+      pinnedVersion: "v1.0.0",
+    },
+  ]);
+});
+
 test("does not throw when mixing run and uses", () => {
   const input = convertToAst({
     name: "PR",

@@ -33,12 +33,18 @@ export default async function (
       continue;
     }
 
-    // Look up those actions on Github
-    const newVersion = await findRefOnGithub(actions[i], debug);
-    actions[i].newVersion = newVersion;
+    try {
+      // Look up those actions on Github
+      const newVersion = await findRefOnGithub(actions[i], debug);
+      actions[i].newVersion = newVersion;
 
-    // Rewrite each action, replacing the uses block with a specific SHA
-    input = replaceActions(input, actions[i], comment);
+      // Rewrite each action, replacing the uses block with a specific SHA
+      input = replaceActions(input, actions[i], comment);
+    } catch (e) {
+      console.error(
+        `Failed to pin ${action}@${actions[i].pinnedVersion}: ${e.message || e}`,
+      );
+    }
   }
 
   return {
