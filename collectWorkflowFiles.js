@@ -8,7 +8,7 @@ export default function (programArgs, recursive) {
   for (let pathname of programArgs) {
     if (process.env.WORKFLOWS_DIR) {
       // If WORKFLOWS_DIR is set, prepend it to the pathname
-      pathname = path.join(process.env.WORKFLOWS_DIR, pathname);
+      pathname = path.posix.join(process.env.WORKFLOWS_DIR, pathname);
     }
 
     if (fs.lstatSync(pathname).isFile()) {
@@ -19,7 +19,7 @@ export default function (programArgs, recursive) {
         globPattern = "**/*.{yaml,yml}";
       }
 
-      const files = glob.sync(path.join(`${pathname}`, globPattern));
+      const files = glob.sync(path.posix.join(`${pathname}`, globPattern));
       filesToProcess = filesToProcess.concat(files);
     }
   }
