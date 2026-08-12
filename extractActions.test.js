@@ -249,6 +249,10 @@ test("skips local actions", () => {
             name: "Local Step",
             uses: "./local-action",
           },
+          {
+            name: "Self-repository Step",
+            uses: "$/self-action",
+          },
         ],
       },
     },

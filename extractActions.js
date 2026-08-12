@@ -87,7 +87,7 @@ function handleStep(actions, items, comment) {
       debug(`Skipping docker:// action: '${line}'`);
       continue;
     }
-    if (line.substr(0, 2) == "./") {
+    if (line.substr(0, 2) == "./" || line.substr(0, 2) == "$/") {
       debug(`Skipping local action: '${line}'`);
       continue;
     }
