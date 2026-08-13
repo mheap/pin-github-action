@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^21",
-    "commander": "^13",
+    "commander": "^15",
     "debug": "^4.4.3",
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.3",
