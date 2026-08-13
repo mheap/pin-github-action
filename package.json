@@ -39,5 +39,8 @@
   },
   "bin": {
     "pin-github-action": "bin.js"
+  },
+  "overrides": {
+    "picomatch": "2.3.2"
   }
 }
