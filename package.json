@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-plugin-prettier": "^5",
     "jest": "^29",
     "nock": "^14",
