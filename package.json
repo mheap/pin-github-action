@@ -21,7 +21,7 @@
     "url": "https://github.com/mheap/pin-github-action.git"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.1.0",
     "eslint": "^10",
     "eslint-plugin-prettier": "^5",
     "jest": "^29",
