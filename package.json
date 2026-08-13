@@ -29,7 +29,7 @@
     "prettier": "^3"
   },
   "dependencies": {
-    "@octokit/rest": "^21",
+    "@octokit/rest": "^22",
     "commander": "^15",
     "debug": "^4.4.3",
     "escape-string-regexp": "^5.0.0",
