@@ -21,21 +21,21 @@
     "url": "https://github.com/mheap/pin-github-action.git"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "eslint": "^9",
+    "cross-env": "^10.1.0",
+    "eslint": "^10",
     "eslint-plugin-prettier": "^5",
-    "jest": "^29",
+    "jest": "^30",
     "nock": "^14",
     "prettier": "^3"
   },
   "dependencies": {
-    "@octokit/rest": "^21",
-    "commander": "^13",
-    "debug": "^4.4.0",
+    "@octokit/rest": "^22",
+    "commander": "^15",
+    "debug": "^4.4.3",
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.3",
-    "matcher": "^5.0.0",
-    "yaml": "^2.7.0"
+    "matcher": "^6.0.0",
+    "yaml": "^2.9.0"
   },
   "bin": {
     "pin-github-action": "bin.js"
