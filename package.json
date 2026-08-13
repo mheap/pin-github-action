@@ -34,7 +34,7 @@
     "debug": "^4.4.3",
     "escape-string-regexp": "^5.0.0",
     "fast-glob": "^3.3.3",
-    "matcher": "^5.0.0",
+    "matcher": "^6.0.0",
     "yaml": "^2.9.0"
   },
   "bin": {
