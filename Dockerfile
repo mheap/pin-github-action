@@ -18,5 +18,5 @@ ENV WORKFLOWS_DIR=/workflows
 
 # Set the entry point for the container to run the CLI
 # Replace 'your-cli-command' with the actual command of your CLI app
-ENTRYPOINT ["node", "/src/bin.js"]
+ENTRYPOINT ["/src/entrypoint.sh"]
 

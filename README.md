@@ -60,6 +60,17 @@ npm install -g pin-github-action
 alias pin-github-action='docker run --rm -v $(pwd):/workflows -e GITHUB_TOKEN mheap/pin-github-action'
 ```
 
+## Github action
+
+You can also use this as a GitHub action in your workflow:
+
+```yaml
+  - name: Pin GitHub Actions
+    uses: mheap/pin-github-action@sha1233 # vn.n.n
+    with:
+      token: ${{ secrets.GITHUB_TOKEN }}
+```
+
 ## Usage
 
 Use on single file:
